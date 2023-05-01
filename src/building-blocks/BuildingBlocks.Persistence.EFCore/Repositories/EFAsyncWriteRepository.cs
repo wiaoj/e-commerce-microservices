@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BuildingBlocks.Persistence.EFCore.Repositories;
 public abstract class EFAsyncWriteRepository<TEntity, TContext> : EFRepository<TContext>, IEFAsyncWriteRepository<TEntity>
 	where TEntity : Entity
-	where TContext : DbContext, new() {
+	where TContext : DbContext {
 	protected EFAsyncWriteRepository(TContext context) : base(context) { }
 
 	public async ValueTask AddAsync(TEntity entity, CancellationToken cancellationToken) {

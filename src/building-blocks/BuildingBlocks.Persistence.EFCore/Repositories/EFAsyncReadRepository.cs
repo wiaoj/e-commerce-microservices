@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BuildingBlocks.Persistence.EFCore.Repositories;
 public abstract class EFAsyncReadRepository<TEntity, TContext> : EFRepository<TContext>, IEFAsyncReadRepository<TEntity>
 	where TEntity : Entity
-	where TContext : DbContext, new() {
+	where TContext : DbContext {
 
 	protected EFAsyncReadRepository(TContext context) : base(context) { }
 
