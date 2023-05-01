@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace BuildingBlocks.Persistence.EFCore.Extensions;
 public static class IQueryableExtensions {
-	public static IQueryable<TEntity> ApplyTracking<TEntity>(this IQueryable<TEntity> queryable, Boolean tracking) where TEntity : Entity, new() {
+	public static IQueryable<TEntity> ApplyTracking<TEntity>(this IQueryable<TEntity> queryable, Boolean tracking) where TEntity : Entity {
 		return tracking ? queryable : queryable.AsNoTracking();
 	}
 	public static IQueryable<TEntity> ApplyInclude<TEntity>(this IQueryable<TEntity> queryable,
