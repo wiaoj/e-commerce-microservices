@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Persistence.EFCore.Repositories;
 public abstract class EFAsyncWriteRepository<TEntity, TContext> : EFRepository<TContext>, IEFAsyncWriteRepository<TEntity>
-	where TEntity : Entity, new()
+	where TEntity : Entity
 	where TContext : DbContext, new() {
 	protected EFAsyncWriteRepository(TContext context) : base(context) { }
 

@@ -1,5 +1,7 @@
-﻿namespace BuildingBlocks.Application.Abstraction.Repositories;
-public interface IAsyncWriteRepository<in TEntity> where TEntity : class, new() {
+﻿using BuildingBlocks.Domain;
+
+namespace BuildingBlocks.Application.Abstraction.Repositories;
+public interface IAsyncWriteRepository<in TEntity> where TEntity : Entity {
 	public ValueTask AddAsync(TEntity entity, CancellationToken cancellationToken);
 	public ValueTask AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
 	public ValueTask UpdateAsync(TEntity entity, CancellationToken cancellationToken);
