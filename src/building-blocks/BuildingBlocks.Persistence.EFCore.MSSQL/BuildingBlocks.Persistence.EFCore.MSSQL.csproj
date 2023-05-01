@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BuildingBlocks.Persistence.EFCore\BuildingBlocks.Persistence.EFCore.csproj" />
+  </ItemGroup>
+
 </Project>
