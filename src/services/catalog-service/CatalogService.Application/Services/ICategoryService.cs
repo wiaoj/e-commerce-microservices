@@ -2,5 +2,5 @@
 
 namespace CatalogService.Application.Services;
 public interface ICategoryService {
-	public Task AddCategoryAsync(Command command, CancellationToken cancellationToken);
+	public Task AddCategoryAsync(CreateCategoryCommand command, CancellationToken cancellationToken);
 }

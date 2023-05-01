@@ -2,7 +2,7 @@
 
 namespace CatalogService.Domain.Entities;
 public sealed class CategoryEntity : Entity {
-	public required String Name { get; set; }
+	public String Name { get; set; }
 	public Guid? ParentCategoryId { get; set; }
 	public CategoryEntity? ParentCategory { get; set; }
 
