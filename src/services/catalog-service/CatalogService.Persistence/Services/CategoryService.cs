@@ -34,5 +34,6 @@ internal sealed class CategoryService : ICategoryService {
 		}
 
 		await this.categoryWriteRepository.AddAsync(category, cancellationToken);
+		await this.categoryWriteRepository.SaveChangesAsync(cancellationToken);
 	}
 }

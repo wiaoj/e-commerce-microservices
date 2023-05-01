@@ -1,7 +1,10 @@
-﻿using BuildingBlocks.Persistence.EFCore.MSSQL.Context;
+﻿using BuildingBlocks.Persistence.EFCore.MSSQL;
+using CatalogService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Persistence.Contexts;
-public sealed class CategoryServiceDbContext : EFCoreMSSQLDbContext {
-	public CategoryServiceDbContext(DbContextOptions options) : base(options) {	}
+public sealed class CategoryServiceDbContext : MSSQLDbContext {
+	public CategoryServiceDbContext(DbContextOptions options) : base(options) { }
+
+	public DbSet<CategoryEntity> Categories { get; set; }
 }

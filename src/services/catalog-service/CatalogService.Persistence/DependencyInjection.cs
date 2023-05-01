@@ -1,4 +1,5 @@
-﻿using CatalogService.Application.Services;
+﻿using BuildingBlocks.Persistence.EFCore.MSSQL;
+using CatalogService.Application.Services;
 using CatalogService.Persistence.Contexts;
 using CatalogService.Persistence.Repositories;
 using CatalogService.Persistence.Repositories.Interfaces;
@@ -16,28 +17,22 @@ public static class DependencyInjection {
 			options.UseSqlServer(configuration.GetConnectionString("MsSQLConnectionString"));
 		});
 
-		services.Configure<SQLServerOptions>(configuration.GetSection(SQLServerOptions.SECTION_NAME));
+		services.Configure<SQLServerOptions>(configuration.GetSection(new SQLServerOptions().SECTION_NAME));
+
 		SQLServerOptions sqlOptions = services.BuildServiceProvider().GetRequiredService<IOptions<SQLServerOptions>>().Value;
 
-		services.AddDbContext<SocialAppDbContext>(options => {
-			options.UseSqlServer(configuration.GetConnectionString(MsSQLDatabaseContext.MsSQL_CONNECTION_STRING),
+		services.AddDbContext<CategoryServiceDbContext>(options => {
+			options.UseSqlServer(configuration.GetConnectionString(CategoryServiceDbContext.CONNECTION_STRING_NAME),
 				 sqlServerOptions => {
 					 sqlServerOptions.EnableRetryOnFailure(sqlOptions.RetryCount, TimeSpan.FromSeconds(sqlOptions.RetryDelaySeconds), null);
-					 sqlServerOptions.MigrationsAssembly(typeof(SocialAppDbContext).Assembly.FullName);
+					 sqlServerOptions.MigrationsAssembly(typeof(CategoryServiceDbContext).Assembly.FullName);
 					 sqlServerOptions.MigrationsHistoryTable(
 						 tableName: HistoryRepository.DefaultTableName,
-						 schema: SocialAppDbContext.DEFAULT_SCHEMA);
+						 schema: "test");
 				 });
-
-			//using var context = new SocialAppDbContext(options.Options);
-			//context.Database.Migrate();
 		});
 
-		//Task.Run(async () => {
-		//	await services.BuildServiceProvider().GetRequiredService<SocialAppDbContext>().Database.MigrateAsync();
-		//});
-
-		services.BuildServiceProvider().GetRequiredService<SocialAppDbContext>().Database.Migrate();
+		services.BuildServiceProvider().GetRequiredService<CategoryServiceDbContext>().Database.Migrate();
 
 		services.AddServices()
 			.AddRepositories();

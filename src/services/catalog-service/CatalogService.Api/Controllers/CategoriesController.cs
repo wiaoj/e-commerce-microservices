@@ -14,8 +14,8 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpPost]
-	public IActionResult Create(CreateCategoryCommand request) {
-		this.sender.Send(request);
+	public async Task<IActionResult> Create(CreateCategoryCommand request) {
+		await this.sender.Send(request);
 		return Ok();
 	}
 }
