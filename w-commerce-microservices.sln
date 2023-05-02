@@ -21,15 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.Persistence.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks.Application", "src\building-blocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj", "{3A06E066-A0AE-4EA1-AFAB-7B868A775537}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Api", "src\services\catalog-service\CatalogService.Api\CatalogService.Api.csproj", "{4583C49C-31FC-4F25-BBE0-E561B0871224}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Api", "src\services\catalog-service\CatalogService.Api\CatalogService.Api.csproj", "{4583C49C-31FC-4F25-BBE0-E561B0871224}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Application", "src\services\catalog-service\CatalogService.Application\CatalogService.Application.csproj", "{1D8065D4-3D4E-4FB1-8E30-BA0706EF8415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Application", "src\services\catalog-service\CatalogService.Application\CatalogService.Application.csproj", "{1D8065D4-3D4E-4FB1-8E30-BA0706EF8415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Domain", "src\services\catalog-service\CatalogService.Domain\CatalogService.Domain.csproj", "{2ABD9B3A-8AE0-44F5-BC91-3D7A11D14E7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Domain", "src\services\catalog-service\CatalogService.Domain\CatalogService.Domain.csproj", "{2ABD9B3A-8AE0-44F5-BC91-3D7A11D14E7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Infrastructure", "src\services\catalog-service\CatalogService.Infrastructure\CatalogService.Infrastructure.csproj", "{93F1D6BF-17D0-4FAB-A5C4-55CF0A5B0F89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Infrastructure", "src\services\catalog-service\CatalogService.Infrastructure\CatalogService.Infrastructure.csproj", "{93F1D6BF-17D0-4FAB-A5C4-55CF0A5B0F89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Persistence", "src\services\catalog-service\CatalogService.Persistence\CatalogService.Persistence.csproj", "{00A12414-DCFB-4E26-AF55-198D56E798BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Persistence", "src\services\catalog-service\CatalogService.Persistence\CatalogService.Persistence.csproj", "{00A12414-DCFB-4E26-AF55-198D56E798BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

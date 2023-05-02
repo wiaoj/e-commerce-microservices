@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace CatalogService.Persistence;
 public static class DependencyInjection {
@@ -36,6 +37,8 @@ public static class DependencyInjection {
 
 		services.AddServices()
 			.AddRepositories();
+
+		services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 		return services;
 	}

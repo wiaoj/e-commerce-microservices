@@ -10,4 +10,9 @@
     <PackageReference Include="MediatR" Version="12.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\building-blocks\BuildingBlocks.Application.Abstraction\BuildingBlocks.Application.Abstraction.csproj" />
+    <ProjectReference Include="..\CatalogService.Domain\CatalogService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
