@@ -1,4 +1,5 @@
-﻿using CatalogService.Application.Features.Categories.Commands.CreateCategory;
+﻿using BuildingBlocks.Application.Pagination;
+using CatalogService.Application.Features.Categories.Commands.CreateCategory;
 using CatalogService.Application.Features.Categories.Commands.DeleteCategoryCommand;
 using CatalogService.Application.Features.Categories.Commands.UpdateCategorCommand;
 using CatalogService.Application.Features.Categories.Dtos;
@@ -42,8 +43,10 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAll(CancellationToken cancellationToken) {
-		return this.Ok(await this.sender.Send(new GetCategoriesQuery(), cancellationToken));
+	public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken) {
+		return this.Ok(await this.sender.Send(new GetCategoriesQuery() { 
+			PaginationRequest = request
+		}, cancellationToken));
 	}
 
 	[HttpGet("{id}")]

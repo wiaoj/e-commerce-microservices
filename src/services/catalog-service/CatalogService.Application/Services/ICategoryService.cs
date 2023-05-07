@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
+using BuildingBlocks.Application.Pagination;
 using CatalogService.Application.Features.Categories.Commands.CreateCategory;
 using CatalogService.Application.Features.Categories.Commands.UpdateCategorCommand;
 using CatalogService.Application.Features.Categories.Dtos;
@@ -10,6 +11,6 @@ public interface ICategoryService {
 	public Task AddCategoryAsync(CreateCategoryDto createCategoryDto, CancellationToken cancellationToken);
 	public Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto, CancellationToken cancellationToken);
 	public Task DeleteCategoryAsync(DeleteCategoryDto deleteCategoryDto, CancellationToken cancellationToken);
-	public Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(GetCategoriesQuery query, CancellationToken cancellationToken);
+	public Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken);
 	public Task<GetCategoryDto> GetCategoryAsync(GetCategoryQuery query, CancellationToken cancellationToken);
 }

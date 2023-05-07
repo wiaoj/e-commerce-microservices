@@ -42,13 +42,13 @@ internal sealed class CategoryService : ICategoryService {
 		await this.categoryWriteRepository.SaveChangesAsync(cancellationToken);
 	}
 
-	public async Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(GetCategoriesQuery query, CancellationToken cancellationToken) {
+	public async Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken) {
 		GetListParameters<CategoryEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
-			Index = 0,
-			Size = Int32.MaxValue,
-			OrderBy = x => x.OrderBy(x => x.Name)
+			Index = paginationRequest.Page,
+			Size = paginationRequest.Size,
+			OrderBy = x => x.OrderBy(x => x.Name),
 		};
 		IPaginate<CategoryEntity> categories = await this.categoryReadRepository.GetListAsync(parameters);
 		IPaginate<GetCategoriesDto> mappedCategories = this.mapper.Map<Paginate<GetCategoriesDto>>(categories);
