@@ -26,12 +26,12 @@ public record Paginate<TEntity> : IPaginate<TEntity> {
 		this.Pages = (Int32)Math.Ceiling(this.Count / (Double)this.Size);
 
 		if(source is IQueryable<TEntity> queryable) {
-			this.SetCount(queryable.Count());
-			this.SetItems(queryable);
+			this.SetCount(queryable.Count())
+				.SetItems(queryable);
 		} else {
 			TEntity[] enumerable = source as TEntity[] ?? source.ToArray();
-			this.SetCount(enumerable.Count());
-			this.SetItems(enumerable);
+			this.SetCount(enumerable.Count())
+				.SetItems(enumerable);
 		}
 	}
 
