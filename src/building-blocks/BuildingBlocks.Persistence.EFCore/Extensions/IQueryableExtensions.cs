@@ -1,6 +1,7 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
 using BuildingBlocks.Domain;
+using BuildingBlocks.Persistence.EFCore.Parameters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
@@ -25,29 +26,29 @@ public static class IQueryableExtensions {
 	}
 
 	public static async Task<IPaginate<TEntity>> ToPaginateAsync<TEntity>(this IQueryable<TEntity> source,
-														   Int32 index,
-														   Int32 size,
-														   Int32 from,
+														   PaginationOptions? paginationOptions,
 														   CancellationToken cancellationToken) {
-		if(from > index) {
-			throw new ArgumentException($"From: {from} > Index: {index}, must from <= Index");
+		paginationOptions ??= new();
+		if(paginationOptions.From > paginationOptions.Index) {
+			throw new ArgumentException($"From: {paginationOptions.From} > Index: {paginationOptions.Index}, must from <= Index");
 		}
 
-		Int32 count = await source.CountAsync(cancellationToken).ConfigureAwait(false);
+		Int64 count = await source.LongCountAsync(cancellationToken).ConfigureAwait(false);
 
 		List<TEntity> items = await source
-			.Skip((index - from) * size)
-			.Take(size)
+			.Skip((paginationOptions.Index - 1 - paginationOptions.From) * paginationOptions.Size)
+			.Take(paginationOptions.Size)
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
 
 		return new Paginate<TEntity>() {
-			Index = index,
-			Size = size,
-			From = from,
-			Count = count,
+			PaginationInfo = new() {
+				Index = paginationOptions.Index,
+				Size = paginationOptions.Size,
+				From = paginationOptions.From,
+				Count = count,
+			},
 			Items = items,
-			Pages = (Int32)Math.Ceiling(count / (Double)size)
 		};
 	}
 }
