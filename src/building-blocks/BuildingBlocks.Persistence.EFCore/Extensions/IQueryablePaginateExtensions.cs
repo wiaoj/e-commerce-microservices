@@ -36,7 +36,7 @@ public static class IQueryableExtensions {
 		Int32 count = await source.CountAsync(cancellationToken).ConfigureAwait(false);
 
 		List<TEntity> items = await source
-			.Skip((index - from) * size)
+			.Skip((index - 1 - from) * size)
 			.Take(size)
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
