@@ -10,23 +10,9 @@ internal sealed class CategoryProfile : Profile {
 		CreateMap<CreateCategoryDto, CategoryEntity>();
 		CreateMap<UpdateCategoryDto, CategoryEntity>();
 
-		CreateMap<CategoryEntity, CategoryDto>()
-			.ForMember(destination => destination.Id,
-			  options => options.MapFrom(source => source.Id))
-			.ForMember(destination => destination.Name,
-			  options => options.MapFrom(source => source.Name))
-			/*
-			.ForMember(dest => dest.ParentCategoryId, opt => opt.MapFrom(src => src.ParentCategoryId))
-			.ForMember(dest => dest.ChildCategories, opt => opt.MapFrom(src => src.ChildCategories))
-			*/;
+		CreateMap<CategoryEntity, CategoryDto>();
 
-		CreateMap<CategoryEntity, GetCategoryDto>()
-			.ForMember(destination => destination.ChildCategories,
-			  options => options.MapFrom(source => source.ChildCategories));
-
-		CreateMap<IPaginate<CategoryEntity>, Paginate<GetCategoriesDto>>()
-			.ForMember(destination => destination.Items,
-			  options => options.MapFrom(source => source.Items));
+		CreateMap<CategoryEntity, GetCategoryDto>();
 
 		CreateMap<CategoryEntity, GetCategoriesDto>();
 	}
