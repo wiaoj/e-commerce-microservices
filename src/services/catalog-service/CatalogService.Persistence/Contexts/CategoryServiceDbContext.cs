@@ -8,6 +8,7 @@ public sealed class CategoryServiceDbContext : MSSQLDbContext {
 
 	public DbSet<CategoryEntity> Categories { get; set; }
 	public DbSet<ProductEntity> Products { get; set; }
+	public DbSet<CategoryEntityProductEntity> CategoriesProducts { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		modelBuilder.Entity<CategoryEntity>()

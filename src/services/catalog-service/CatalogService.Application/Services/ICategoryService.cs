@@ -1,9 +1,6 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
-using CatalogService.Application.Features.Categories.Commands.CreateCategory;
-using CatalogService.Application.Features.Categories.Commands.UpdateCategorCommand;
 using CatalogService.Application.Features.Categories.Dtos;
-using CatalogService.Application.Features.Categories.Queries.GetCategories;
 using CatalogService.Application.Features.Categories.Queries.GetCategory;
 
 namespace CatalogService.Application.Services;
