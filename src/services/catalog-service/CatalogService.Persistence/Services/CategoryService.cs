@@ -38,8 +38,10 @@ internal sealed class CategoryService : ICategoryService {
 
 		CategoryEntity category = this.mapper.Map<CategoryEntity>(createCategoryDto);
 
-		await this.categoryWriteRepository.AddAsync(category, cancellationToken);
-		await this.categoryWriteRepository.SaveChangesAsync(cancellationToken);
+		Task.WaitAll(new Task[2] {
+			this.categoryWriteRepository.AddAsync(category, cancellationToken).AsTask(),
+			this.categoryWriteRepository.SaveChangesAsync(cancellationToken)
+		}, cancellationToken);
 	}
 
 	public async Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken) {
