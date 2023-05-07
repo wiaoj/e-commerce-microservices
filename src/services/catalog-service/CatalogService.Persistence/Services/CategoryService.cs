@@ -46,8 +46,10 @@ internal sealed class CategoryService : ICategoryService {
 		GetListParameters<CategoryEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
-			Index = paginationRequest.Page,
-			Size = paginationRequest.Size,
+			PaginationOptions = new() {
+				Index = paginationRequest.Page,
+				Size = paginationRequest.Size,
+			},
 			OrderBy = x => x.OrderBy(x => x.Name),
 		};
 		IPaginate<CategoryEntity> categories = await this.categoryReadRepository.GetListAsync(parameters);
