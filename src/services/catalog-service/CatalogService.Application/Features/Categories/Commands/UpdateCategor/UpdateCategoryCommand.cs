@@ -2,7 +2,7 @@
 using CatalogService.Application.Services;
 using MediatR;
 
-namespace CatalogService.Application.Features.Categories.Commands.UpdateCategorCommand;
+namespace CatalogService.Application.Features.Categories.Commands.UpdateCategor;
 public sealed record UpdateCategoryCommand : IRequest<Unit> {
 	public required UpdateCategoryDto UpdateCategory { get; set; }
 

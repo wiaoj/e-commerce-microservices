@@ -44,13 +44,16 @@ public static class DependencyInjection {
 	}
 
 	private static IServiceCollection AddServices(this IServiceCollection services) {
-		services.AddScoped<ICategoryService, CategoryService>();
+		services.AddScoped<ICategoryService, CategoryService>()
+				.AddScoped<IProductService, ProductService>();
 		return services;
 	}
 
 	private static IServiceCollection AddRepositories(this IServiceCollection services) {
 		services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
 		services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
+		services.AddScoped<IProductReadRepository, ProductReadRepository>();
+		services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
 		return services;
 	}
 }
