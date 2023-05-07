@@ -15,5 +15,7 @@ internal sealed class CategoryProfile : Profile {
 		CreateMap<CategoryEntity, GetCategoryDto>();
 
 		CreateMap<CategoryEntity, GetCategoriesDto>();
+
+		CreateMap<CategoryEntity, GetCategoryWithProductsDto>();
 	}
 }
