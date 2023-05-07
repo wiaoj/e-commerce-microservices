@@ -27,6 +27,6 @@ public abstract class EFAsyncReadRepository<TEntity, TContext> : EFRepository<TC
 						  .ApplyInclude(parameters.Include)
 						  .ApplyPredicate(parameters.Predicate)
 						  .ApplyOrderBy(parameters.OrderBy)
-						  .ToPaginateAsync(parameters.Index, parameters.Size, default, parameters.CancellationToken);
+						  .ToPaginateAsync(parameters.PaginationOptions, parameters.CancellationToken);
 	}
 }
