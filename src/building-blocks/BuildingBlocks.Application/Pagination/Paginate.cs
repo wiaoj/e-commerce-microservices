@@ -6,7 +6,7 @@ public record Paginate<TEntity> : IPaginate<TEntity> {
 	public Int32 Size { get; set; }
 	public Int32 From { get; set; }
 	public Int32 Pages { get; set;}
-	public Int32 Count { get; set; }
+	public Int64 Count { get; set; }
 	public IList<TEntity> Items { get; set; }
 	public Boolean HasPrevious => this.Index - this.From > default(Int32);
 	public Boolean HasNext => this.Index - this.From + 1 < this.Pages;
@@ -26,16 +26,16 @@ public record Paginate<TEntity> : IPaginate<TEntity> {
 		this.Pages = (Int32)Math.Ceiling(this.Count / (Double)this.Size);
 
 		if(source is IQueryable<TEntity> queryable) {
-			this.SetCount(queryable.Count())
+			this.SetCount(queryable.LongCount())
 				.SetItems(queryable);
 		} else {
 			TEntity[] enumerable = source as TEntity[] ?? source.ToArray();
-			this.SetCount(enumerable.Count())
+			this.SetCount(enumerable.LongCount())
 				.SetItems(enumerable);
 		}
 	}
 
-	private Paginate<TEntity> SetCount(Int32 count) {
+	private Paginate<TEntity> SetCount(Int64 count) {
 		this.Count = count;
 		return this;
 	}
