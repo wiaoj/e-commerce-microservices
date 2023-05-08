@@ -35,8 +35,10 @@ public static class IQueryableExtensions {
 
 		Int64 count = await source.LongCountAsync(cancellationToken).ConfigureAwait(false);
 
+		Int32 pageStartIndex = (paginationOptions.Index - 1 - paginationOptions.From) * paginationOptions.Size;
+
 		List<TEntity> items = await source
-			.Skip((paginationOptions.Index - 1 - paginationOptions.From) * paginationOptions.Size)
+			.Skip(pageStartIndex)
 			.Take(paginationOptions.Size)
 			.ToListAsync(cancellationToken)
 			.ConfigureAwait(false);
