@@ -6,7 +6,7 @@ using CatalogService.Application.Features.Products.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CatalogService.Api.Controllers;
+namespace CatalogService.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController : ControllerBase {

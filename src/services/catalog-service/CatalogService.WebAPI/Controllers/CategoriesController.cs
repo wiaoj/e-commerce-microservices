@@ -9,7 +9,7 @@ using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProd
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CatalogService.Api.Controllers;
+namespace CatalogService.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class CategoriesController : ControllerBase {

@@ -45,7 +45,7 @@ internal sealed class CategoryService : ICategoryService {
 	}
 
 	public async Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken) {
-		GetListParameters<CategoryEntity> parameters = new() {
+		GetPaginatedListParameters<CategoryEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
 			PaginationOptions = new() {
@@ -54,7 +54,7 @@ internal sealed class CategoryService : ICategoryService {
 			},
 			OrderBy = x => x.OrderBy(x => x.Name),
 		};
-		IPaginate<CategoryEntity> categories = await this.categoryReadRepository.GetListAsync(parameters);
+		IPaginate<CategoryEntity> categories = await this.categoryReadRepository.GetPaginatedListAsync(parameters);
 		IPaginate<GetCategoriesDto> mappedCategories = this.mapper.Map<Paginate<GetCategoriesDto>>(categories);
 		return mappedCategories;
 	}
