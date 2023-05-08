@@ -5,6 +5,7 @@ using CatalogService.Application.Features.Products.Dtos;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Persistence.Services;
 internal sealed class ProductService : IProductService {
@@ -23,25 +24,12 @@ internal sealed class ProductService : IProductService {
 		this.categoryReadRepository = categoryReadRepository;
 	}
 
-	public async Task AddProductAsync(CreateProductDto createProductDto, CancellationToken cancellationToken) {
-		CategoryEntity? category = null;
-		if(createProductDto.CategoryId is not null) {
-			GetParameters<CategoryEntity> parameters = new() {
-				CancellationToken = cancellationToken,
-				EnableTracking = true,
-				Predicate = x => x.Id == createProductDto.CategoryId,
-			};
-			category = await this.categoryReadRepository.GetAsync(parameters);
-
-			ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı");
-		}
-		
-
+	public async Task AddProductAsync(
+		CreateProductDto createProductDto,
+		CancellationToken cancellationToken) {
 		ProductEntity product = this.mapper.Map<ProductEntity>(createProductDto);
 
-		if(category is not null) {
-			product.AddCategory(category);
-		}
+		await AddProductCategoriesIfExistsAsync(createProductDto.CategoryIds, product, cancellationToken);
 
 		Task.WaitAll(new Task[2] {
 			this.productWriteRepository.AddAsync(product, cancellationToken).AsTask(),
@@ -72,27 +60,29 @@ internal sealed class ProductService : IProductService {
 		});
 		ArgumentNullException.ThrowIfNull(product, "Ürün bulunamadı!");
 
-		if(updateProductDto.Categories.Any()) {
-			//GetParameters<ProductEntity> parameters = new() {
-			//	CancellationToken = cancellationToken,
-			//	EnableTracking = true,
-			//	Predicate = x => x.Id == updateProductDto.ParentCategoryId,
-			//};
-			GetListParameters<ProductEntity> parameters = new() {
+		ProductEntity updatedCategory = this.mapper.Map(updateProductDto, product);
+
+		await AddProductCategoriesIfExistsAsync(updateProductDto.CategoryIds, updatedCategory, cancellationToken);
+
+		Task.WaitAll(new Task[2] {
+			this.productWriteRepository.UpdateAsync(updatedCategory, cancellationToken).AsTask(),
+			this.productWriteRepository.SaveChangesAsync(cancellationToken),
+		}, cancellationToken);
+	}
+
+	private async Task AddProductCategoriesIfExistsAsync(IEnumerable<Guid>? categoryIds, ProductEntity product, CancellationToken cancellationToken) {
+		if(categoryIds?.Any() is true) {
+			GetListParameters<CategoryEntity> parameters = new() {
 				CancellationToken = cancellationToken,
 				EnableTracking = true,
-				Predicate = x => x.Categories.SelectMany(x => x.Id == updateProductDto.Categories.SelectMany())
+				//Predicate = category => updateProductDto.Categories.SelectMany(x => x.Id == category.Id)
+				Predicate = x => categoryIds!.Contains(x.Id)
 			};
 
-			ProductEntity? parentCategory = await this.categoryReadRepository.GetListAsync(parameters);
-			ArgumentNullException.ThrowIfNull(parentCategory, "Üst kategori bulunamadı!");
-			//product.SetParentCategory(parentCategory);
+			//IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetCategoriesWithCategoryIds(updateProductDto.CategoryIds, cancellationToken);
+			IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetListAsync(parameters);
+			ArgumentNullException.ThrowIfNull(categories, "Kategori bulunamadı!");
+			product.AddRangeCategories(categories);
 		}
-
-		//ProductEntity updatedCategory = this.mapper.Map(updateCategoryDto, product);
-		//Task.WaitAll(new Task[2] {
-		//	this.categoryWriteRepository.UpdateAsync(updatedCategory, cancellationToken).AsTask(),
-		//	this.categoryWriteRepository.SaveChangesAsync(cancellationToken),
-		//}, cancellationToken);
 	}
 }

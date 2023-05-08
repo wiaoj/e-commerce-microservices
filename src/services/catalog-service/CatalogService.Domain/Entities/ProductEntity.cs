@@ -23,4 +23,9 @@ public sealed class ProductEntity : Entity {
 		this.Categories.Add(category);
 		return this;
 	}
+
+	public ProductEntity AddRangeCategories(IEnumerable<CategoryEntity> categories) {
+		categories.ToList().ForEach(this.Categories.Add);
+		return this;
+	}
 }
