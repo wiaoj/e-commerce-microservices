@@ -16,17 +16,24 @@ public abstract class EFAsyncReadRepository<TEntity, TContext> : EFRepository<TC
 
 	public Int64 Count => this.EntityTable.LongCount();
 
-	public async Task<TEntity?> GetAsync(GetParameters<TEntity> parameters) {
-		return await this.EntityTable.ApplyTracking(parameters.EnableTracking)
+	public Task<TEntity?> GetAsync(GetParameters<TEntity> parameters) {
+		return this.EntityTable.ApplyTracking(parameters.EnableTracking)
 							   .ApplyInclude(parameters.Include)
 							   .FirstOrDefaultAsync(parameters.Predicate, parameters.CancellationToken);
 	}
 
-	public async Task<IPaginate<TEntity>> GetListAsync(GetListParameters<TEntity> parameters) {
-		return await this.EntityTable.ApplyTracking(parameters.EnableTracking)
-						  .ApplyInclude(parameters.Include)
-						  .ApplyPredicate(parameters.Predicate)
-						  .ApplyOrderBy(parameters.OrderBy)
-						  .ToPaginateAsync(parameters.PaginationOptions, parameters.CancellationToken);
+	public Task<IPaginate<TEntity>> GetPaginatedListAsync(GetPaginatedListParameters<TEntity> parameters) {
+		return this.EntityTable.ApplyTracking(parameters.EnableTracking)
+							   .ApplyInclude(parameters.Include)
+							   .ApplyPredicate(parameters.Predicate)
+							   .ApplyOrderBy(parameters.OrderBy)
+							   .ToPaginateAsync(parameters.PaginationOptions, parameters.CancellationToken);
+	}
+
+	public Task<IQueryable<TEntity>> GetListAsync(GetListParameters<TEntity> parameters) {
+		return Task.FromResult(this.EntityTable.ApplyTracking(parameters.EnableTracking)
+						 .ApplyInclude(parameters.Include)
+						 .ApplyPredicate(parameters.Predicate)
+						 .ApplyOrderBy(parameters.OrderBy));
 	}
 }
