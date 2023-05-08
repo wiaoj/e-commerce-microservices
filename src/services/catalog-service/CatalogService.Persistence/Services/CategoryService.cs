@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
+using BuildingBlocks.Persistence.EFCore.Extensions;
 using BuildingBlocks.Persistence.EFCore.Parameters;
 using CatalogService.Application.Features.Categories.Dtos;
-using CatalogService.Application.Features.Categories.Queries.GetCategories;
-using CatalogService.Application.Features.Categories.Queries.GetCategory;
+using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProducts;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;
@@ -59,11 +59,11 @@ internal sealed class CategoryService : ICategoryService {
 		return mappedCategories;
 	}
 
-	public async Task<GetCategoryDto> GetCategoryAsync(GetCategoryQuery query, CancellationToken cancellationToken) {
+	public async Task<GetCategoryDto> GetCategoryAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken) {
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
-			Predicate = x => x.Id == query.Id,
+			Predicate = x => x.Id == categoryIdDto.Value,
 			Include = x => x.Include(x => x.ChildCategories)
 		});
 
@@ -111,5 +111,17 @@ internal sealed class CategoryService : ICategoryService {
 			this.categoryWriteRepository.DeleteAsync(category, cancellationToken).AsTask(),
 			this.categoryWriteRepository.SaveChangesAsync(cancellationToken)
 		}, cancellationToken);
+	}
+
+	public async Task<GetCategoryWithProductsDto> GetCategoryWithProductsAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken) {
+		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.Id == categoryIdDto.Value,
+			Include = x => x.Include(x => x.Products)
+		});
+
+		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
+		return this.mapper.Map<GetCategoryWithProductsDto>(category);
 	}
 }

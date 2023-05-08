@@ -5,6 +5,7 @@ using CatalogService.Application.Features.Categories.Commands.UpdateCategor;
 using CatalogService.Application.Features.Categories.Dtos;
 using CatalogService.Application.Features.Categories.Queries.GetCategories;
 using CatalogService.Application.Features.Categories.Queries.GetCategory;
+using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProducts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,8 +27,9 @@ public class CategoriesController : ControllerBase {
 		return this.Ok();
 	}
 
-	[HttpPut("{id}")]
-	public async Task<IActionResult> Update([FromBody] UpdateCategoryDto request, CancellationToken cancellationToken) {
+	[HttpPut("{id.Value}")]
+	public async Task<IActionResult> Update([FromRoute] CategoryIdDto id, [FromBody] UpdateCategoryDto request, CancellationToken cancellationToken) {
+		request.Id = id.Value;
 		await this.sender.Send(new UpdateCategoryCommand() {
 			UpdateCategory = request
 		}, cancellationToken);
@@ -35,7 +37,7 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpDelete("{request.id}")]
-	public async Task<IActionResult> Delete([FromRoute] DeleteCategoryDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Delete(DeleteCategoryDto request, CancellationToken cancellationToken) {
 		await this.sender.Send(new DeleteCategoryCommand() {
 			DeleteCategory = request
 		}, cancellationToken);
@@ -49,9 +51,16 @@ public class CategoriesController : ControllerBase {
 		}, cancellationToken));
 	}
 
-	[HttpGet("{id}")]
-	public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken) {
+	[HttpGet("{id.Value}")]
+	public async Task<IActionResult> GetById([FromRoute] CategoryIdDto id, CancellationToken cancellationToken) {
 		return this.Ok(await this.sender.Send(new GetCategoryQuery() {
+			Id = id
+		}, cancellationToken));
+	}
+
+	[HttpGet("[action]/{id.Value}")]
+	public async Task<IActionResult> GetByIdWithProducts([FromRoute] CategoryIdDto id, CancellationToken cancellationToken) {
+		return this.Ok(await this.sender.Send(new GetCategoryWithProductsQuery() {
 			Id = id
 		}, cancellationToken));
 	}
