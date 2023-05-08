@@ -14,7 +14,7 @@ public sealed record CreateProductCommand : IRequest<Unit> {
 		}
 
 		public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken) {
-			await this.productService.AddProduct(request.CreateProduct, cancellationToken);
+			await this.productService.AddProductAsync(request.CreateProduct, cancellationToken);
 
 			return Unit.Value;
 		}

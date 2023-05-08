@@ -1,4 +1,7 @@
-﻿using CatalogService.Application.Features.Products.Commands.CreateProduct;
+﻿using CatalogService.Application.Features.Categories.Dtos;
+using CatalogService.Application.Features.Products.Commands.CreateProduct;
+using CatalogService.Application.Features.Products.Commands.DeleteProduct;
+using CatalogService.Application.Features.Products.Commands.UpdateProduct;
 using CatalogService.Application.Features.Products.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +20,23 @@ public class ProductsController : ControllerBase {
 	public async Task<IActionResult> Create(CreateProductDto request, CancellationToken cancellationToken) {
 		await this.sender.Send(new CreateProductCommand() {
 			CreateProduct = request
+		}, cancellationToken);
+		return this.Ok();
+	}
+
+	[HttpPut("{id.Value}")]
+	public async Task<IActionResult> Update([FromRoute] CategoryIdDto id, [FromBody] UpdateProductDto request, CancellationToken cancellationToken) {
+		request.Id = id.Value;
+		await this.sender.Send(new UpdateProductCommand() {
+			UpdateProduct = request
+		}, cancellationToken);
+		return this.Ok();
+	}
+
+	[HttpDelete("{request.id}")]
+	public async Task<IActionResult> Delete([FromRoute] DeleteProductDto request, CancellationToken cancellationToken) {
+		await this.sender.Send(new DeleteProductCommand() {
+			DeleteProduct = request
 		}, cancellationToken);
 		return this.Ok();
 	}
