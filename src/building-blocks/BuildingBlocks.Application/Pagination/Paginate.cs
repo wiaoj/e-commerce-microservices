@@ -4,6 +4,7 @@ namespace BuildingBlocks.Application.Pagination;
 public record Paginate<TEntity> : IPaginate<TEntity> {
 	public PaginationInfo PaginationInfo { get; init; } = new();
 	public IList<TEntity> Items { get; set; } = Array.Empty<TEntity>();
+<<<<<<< HEAD
 
 
 	//public Paginate(IEnumerable<TEntity> source, Int32 index, Int32 size, Int32 from) : this() {
@@ -41,4 +42,6 @@ public record Paginate<TEntity> : IPaginate<TEntity> {
 	//		.Take(this.PaginationInfo.Size).ToList();
 	//	return this;
 	//}
+=======
+>>>>>>> main
 }
