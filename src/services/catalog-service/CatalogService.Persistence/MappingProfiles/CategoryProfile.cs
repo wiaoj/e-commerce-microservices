@@ -1,21 +1,17 @@
 ﻿using AutoMapper;
-using BuildingBlocks.Application.Abstraction.Pagination;
-using BuildingBlocks.Application.Pagination;
 using CatalogService.Application.Features.Categories.Dtos;
 using CatalogService.Domain.Entities;
 
 namespace CatalogService.Persistence.MappingProfiles;
 internal sealed class CategoryProfile : Profile {
 	public CategoryProfile() {
-		CreateMap<CreateCategoryDto, CategoryEntity>();
-		CreateMap<UpdateCategoryDto, CategoryEntity>();
+		this.CreateMap<CreateCategoryDto, CategoryEntity>();
+		this.CreateMap<UpdateCategoryDto, CategoryEntity>();
 
-		CreateMap<CategoryEntity, CategoryDto>();
+		this.CreateMap<CategoryEntity, GetCategoryDto>();
 
-		CreateMap<CategoryEntity, GetCategoryDto>();
+		this.CreateMap<CategoryEntity, GetCategoriesDto>();
 
-		CreateMap<CategoryEntity, GetCategoriesDto>();
-
-		CreateMap<CategoryEntity, GetCategoryWithProductsDto>();
+		this.CreateMap<CategoryEntity, GetCategoryWithProductsDto>();
 	}
 }

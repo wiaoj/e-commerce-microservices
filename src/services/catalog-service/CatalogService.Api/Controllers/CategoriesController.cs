@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Application.Pagination;
 using CatalogService.Application.Features.Categories.Commands.CreateCategory;
 using CatalogService.Application.Features.Categories.Commands.DeleteCategory;
-using CatalogService.Application.Features.Categories.Commands.UpdateCategor;
+using CatalogService.Application.Features.Categories.Commands.UpdateCategory;
 using CatalogService.Application.Features.Categories.Dtos;
 using CatalogService.Application.Features.Categories.Queries.GetCategories;
 using CatalogService.Application.Features.Categories.Queries.GetCategory;
