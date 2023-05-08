@@ -6,5 +6,5 @@ public sealed record CreateProductDto {
 	public required Decimal Price { get; init; }
 	public required UInt16 Stock { get; init; }
 
-	public Guid? CategoryId { get; init; }
+	public IEnumerable<Guid>? CategoryIds { get; init; }
 }
