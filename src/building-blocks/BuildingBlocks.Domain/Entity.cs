@@ -4,7 +4,7 @@ public abstract class Entity {
 	public DateTime CreatedAt { get; set; }
 	public DateTime? UpdatedAt { get; set; }
 
-	public Entity() {
+	protected Entity() {
 		this.Id = Guid.NewGuid();
 	}
 }

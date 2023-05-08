@@ -2,7 +2,7 @@
 using CatalogService.Application.Services;
 using MediatR;
 
-namespace CatalogService.Application.Features.Categories.Commands.DeleteCategoryCommand;
+namespace CatalogService.Application.Features.Categories.Commands.DeleteCategory;
 public sealed record DeleteCategoryCommand : IRequest<Unit> {
 	public required DeleteCategoryDto DeleteCategory { get; set; }
 

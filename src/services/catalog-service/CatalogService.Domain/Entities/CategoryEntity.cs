@@ -6,11 +6,13 @@ public sealed class CategoryEntity : Entity {
 	public Guid? ParentCategoryId { get; set; }
 	public CategoryEntity? ParentCategory { get; set; }
 	public ICollection<CategoryEntity> ChildCategories { get; set; }
+	public ICollection<ProductEntity> Products { get; set; }
 
 	public CategoryEntity(String name) {
 		ArgumentException.ThrowIfNullOrEmpty(name, "Kategori ismi boş olamaz!");
 		this.Name = name;
-		this.ChildCategories = new List<CategoryEntity>();
+		this.ChildCategories = new HashSet<CategoryEntity>();
+		this.Products = new HashSet<ProductEntity>();
 	}
 
 	public CategoryEntity(String name, CategoryEntity parentCategory) : this(name) {

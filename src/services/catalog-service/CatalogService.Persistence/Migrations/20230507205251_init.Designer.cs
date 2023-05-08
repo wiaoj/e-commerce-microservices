@@ -4,6 +4,7 @@ using CatalogService.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogService.Persistence.Migrations
 {
     [DbContext(typeof(CategoryServiceDbContext))]
-    partial class CategoryServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507205251_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,21 +51,6 @@ namespace CatalogService.Persistence.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("CatalogService.Domain.Entities.CategoryEntityProductEntity", b =>
-                {
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CategoryId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CategoriesProducts");
-                });
-
             modelBuilder.Entity("CatalogService.Domain.Entities.ProductEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -93,6 +81,21 @@ namespace CatalogService.Persistence.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("CategoryEntityProductEntity", b =>
+                {
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CategoriesId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("CategoryEntityProductEntity");
+                });
+
             modelBuilder.Entity("CatalogService.Domain.Entities.CategoryEntity", b =>
                 {
                     b.HasOne("CatalogService.Domain.Entities.CategoryEntity", "ParentCategory")
@@ -102,23 +105,19 @@ namespace CatalogService.Persistence.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("CatalogService.Domain.Entities.CategoryEntityProductEntity", b =>
+            modelBuilder.Entity("CategoryEntityProductEntity", b =>
                 {
-                    b.HasOne("CatalogService.Domain.Entities.CategoryEntity", "Category")
+                    b.HasOne("CatalogService.Domain.Entities.CategoryEntity", null)
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CatalogService.Domain.Entities.ProductEntity", "Product")
+                    b.HasOne("CatalogService.Domain.Entities.ProductEntity", null)
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("CatalogService.Domain.Entities.CategoryEntity", b =>
