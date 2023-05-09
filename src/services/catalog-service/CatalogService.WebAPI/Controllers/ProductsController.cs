@@ -1,4 +1,5 @@
-﻿using CatalogService.Application.Dtos.Requests.Category;
+﻿using BuildingBlocks.Application.Pagination;
+using CatalogService.Application.Dtos.Requests.Category;
 using CatalogService.Application.Dtos.Requests.Product;
 using CatalogService.Application.Features.Products.Commands.CreateProduct;
 using CatalogService.Application.Features.Products.Commands.DeleteProduct;
@@ -27,7 +28,7 @@ public class ProductsController : ControllerBase {
 
 	[HttpPut("{id.Value}")]
 	public async Task<IActionResult> Update(
-		[FromRoute] CategoryIdRequest id,
+		[FromRoute] ProductIdRequest id,
 		[FromBody] UpdateProductRequest request,
 		CancellationToken cancellationToken) {
 		request.Id = id.Value;
@@ -45,10 +46,14 @@ public class ProductsController : ControllerBase {
 		return this.Ok();
 	}
 
-	[HttpGet("{request.CategoryId}")]
+	[HttpGet("{categoryId.Value}")]
 	public async Task<IActionResult> GetByCategoryId(
-		[FromRoute] GetProductsByCategoryIdQuery request,
+		[FromRoute] CategoryIdRequest categoryId,
+		[FromQuery] PaginationRequest paginationRequest,
 		CancellationToken cancellationToken) {
-		return this.Ok(await this.sender.Send(request, cancellationToken));
+		return this.Ok(await this.sender.Send(new GetProductsByCategoryIdQuery() {
+			CategoryId = categoryId,
+			PaginationRequest = paginationRequest
+		}, cancellationToken));
 	}
 }
