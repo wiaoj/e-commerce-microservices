@@ -28,7 +28,10 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpPut("{id.Value}")]
-	public async Task<IActionResult> Update([FromRoute] CategoryIdRequest id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Update(
+		[FromRoute] CategoryIdRequest id,
+		[FromBody] UpdateCategoryRequest request,
+		CancellationToken cancellationToken) {
 		request.Id = id.Value;
 		await this.sender.Send(new UpdateCategoryCommand() {
 			UpdateCategoryRequest = request
@@ -59,9 +62,13 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpGet("[action]/{id.Value}")]
-	public async Task<IActionResult> GetByIdWithProducts([FromRoute] CategoryIdRequest id, CancellationToken cancellationToken) {
+	public async Task<IActionResult> GetByIdWithProducts(
+		[FromRoute] CategoryIdRequest id,
+		[FromQuery] PaginationRequest paginationRequest,
+		CancellationToken cancellationToken) {
 		return this.Ok(await this.sender.Send(new GetCategoryWithProductsQuery() {
-			Id = id
+			Id = id,
+			PaginationRequest = paginationRequest
 		}, cancellationToken));
 	}
 }

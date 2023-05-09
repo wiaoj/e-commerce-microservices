@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
+using BuildingBlocks.Application.Pagination;
 using CatalogService.Application.Dtos.Requests.Category;
 using CatalogService.Application.Dtos.Requests.Product;
 using CatalogService.Application.Dtos.Responses.Product;
@@ -16,5 +17,6 @@ public interface IProductService {
 		CancellationToken cancellationToken);
 	public Task<IPaginate<GetProductResponse>> GetProductsByCategoryId(
 		CategoryIdRequest categoryId,
+		PaginationRequest paginationRequest,
 		CancellationToken cancellationToken);
 }

@@ -18,9 +18,7 @@ public class ProductsController : ControllerBase {
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(
-		CreateProductRequest request,
-		CancellationToken cancellationToken) {
+	public async Task<IActionResult> Create(CreateProductRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new CreateProductCommand() {
 			CreateProductRequest = request
 		}, cancellationToken);
@@ -40,17 +38,15 @@ public class ProductsController : ControllerBase {
 	}
 
 	[HttpDelete("{request.id}")]
-	public async Task<IActionResult> Delete(
-		[FromRoute] DeleteProductRequest request,
-		CancellationToken cancellationToken) {
+	public async Task<IActionResult> Delete([FromRoute] DeleteProductRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new DeleteProductCommand() {
 			DeleteProductRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
 
-	[HttpGet("{request.categoryId}")]
-	public async Task<IActionResult> Delete(
+	[HttpGet("{request.CategoryId}")]
+	public async Task<IActionResult> GetByCategoryId(
 		[FromRoute] GetProductsByCategoryIdQuery request,
 		CancellationToken cancellationToken) {
 		return this.Ok(await this.sender.Send(request, cancellationToken));

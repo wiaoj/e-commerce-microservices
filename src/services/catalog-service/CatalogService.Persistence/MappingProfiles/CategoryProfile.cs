@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CatalogService.Application.Dtos.Requests.Category;
 using CatalogService.Application.Dtos.Responses.Category;
+using CatalogService.Application.Dtos.Responses.Product;
 using CatalogService.Domain.Entities;
 
 namespace CatalogService.Persistence.MappingProfiles;
