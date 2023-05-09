@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
-using CatalogService.Application.Features.Products.Dtos;
+using CatalogService.Application.Dtos.Requests.Product;
+using CatalogService.Application.Dtos.Responses.Product;
 using CatalogService.Domain.Entities;
 
 namespace CatalogService.Persistence.MappingProfiles;
 internal sealed class ProductProfile : Profile {
 	public ProductProfile() {
-		CreateMap<CreateProductDto, ProductEntity>();
-		CreateMap<UpdateProductDto, ProductEntity>();
+		this.CreateMap<CreateProductRequest, ProductEntity>();
+		this.CreateMap<UpdateProductRequest, ProductEntity>();
 
-		CreateMap<ProductEntity, GetProductDto>();
+		this.CreateMap<ProductEntity, GetProductResponse>();
 	}
 }

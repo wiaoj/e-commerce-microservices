@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
+using BuildingBlocks.Application.Pagination;
 using BuildingBlocks.Persistence.EFCore.Parameters;
 using BuildingBlocks.Persistence.EFCore.Repositories;
 using CatalogService.Domain.Entities;
@@ -10,12 +11,18 @@ namespace CatalogService.Persistence.Repositories;
 public sealed class ProductReadRepository : EFAsyncReadRepository<ProductEntity, CategoryServiceDbContext>, IProductReadRepository {
 	public ProductReadRepository(CategoryServiceDbContext context) : base(context) { }
 
-	public Task<IPaginate<ProductEntity>> GetProductsByCategoryId(Guid categoryId, CancellationToken cancellationToken) {
+	public Task<IPaginate<ProductEntity>> GetProductsByCategoryId(
+		Guid categoryId,
+		PaginationRequest paginationRequest,
+		CancellationToken cancellationToken) {
 		GetPaginatedListParameters<ProductEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
 			OrderBy = x => x.OrderBy(x => x.Name),
-			PaginationOptions = new(),
+			PaginationOptions = new() {
+				Index = paginationRequest.Page,
+				Size = paginationRequest.Size
+			},
 			Include = x => x.Include(x => x.Categories),
 			Predicate = x => x.Categories.Any(c => c.Id == categoryId)
 		};

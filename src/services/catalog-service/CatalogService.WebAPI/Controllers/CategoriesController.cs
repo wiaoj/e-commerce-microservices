@@ -1,8 +1,8 @@
 ﻿using BuildingBlocks.Application.Pagination;
+using CatalogService.Application.Dtos.Requests.Category;
 using CatalogService.Application.Features.Categories.Commands.CreateCategory;
 using CatalogService.Application.Features.Categories.Commands.DeleteCategory;
 using CatalogService.Application.Features.Categories.Commands.UpdateCategory;
-using CatalogService.Application.Features.Categories.Dtos;
 using CatalogService.Application.Features.Categories.Queries.GetCategories;
 using CatalogService.Application.Features.Categories.Queries.GetCategory;
 using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProducts;
@@ -20,26 +20,29 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(CreateCategoryDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Create(CreateCategoryRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new CreateCategoryCommand() {
-			CreateCategory = request
+			CreateCategoryRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
 
 	[HttpPut("{id.Value}")]
-	public async Task<IActionResult> Update([FromRoute] CategoryIdDto id, [FromBody] UpdateCategoryDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Update(
+		[FromRoute] CategoryIdRequest id,
+		[FromBody] UpdateCategoryRequest request,
+		CancellationToken cancellationToken) {
 		request.Id = id.Value;
 		await this.sender.Send(new UpdateCategoryCommand() {
-			UpdateCategory = request
+			UpdateCategoryRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
 
 	[HttpDelete("{request.id}")]
-	public async Task<IActionResult> Delete(DeleteCategoryDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Delete(DeleteCategoryRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new DeleteCategoryCommand() {
-			DeleteCategory = request
+			DeleteCategoryRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
@@ -52,16 +55,20 @@ public class CategoriesController : ControllerBase {
 	}
 
 	[HttpGet("{id.Value}")]
-	public async Task<IActionResult> GetById([FromRoute] CategoryIdDto id, CancellationToken cancellationToken) {
+	public async Task<IActionResult> GetById([FromRoute] CategoryIdRequest id, CancellationToken cancellationToken) {
 		return this.Ok(await this.sender.Send(new GetCategoryQuery() {
-			Id = id
+			CategoryIdRequest = id
 		}, cancellationToken));
 	}
 
 	[HttpGet("[action]/{id.Value}")]
-	public async Task<IActionResult> GetByIdWithProducts([FromRoute] CategoryIdDto id, CancellationToken cancellationToken) {
+	public async Task<IActionResult> GetByIdWithProducts(
+		[FromRoute] CategoryIdRequest id,
+		[FromQuery] PaginationRequest paginationRequest,
+		CancellationToken cancellationToken) {
 		return this.Ok(await this.sender.Send(new GetCategoryWithProductsQuery() {
-			Id = id
+			Id = id,
+			PaginationRequest = paginationRequest
 		}, cancellationToken));
 	}
 }

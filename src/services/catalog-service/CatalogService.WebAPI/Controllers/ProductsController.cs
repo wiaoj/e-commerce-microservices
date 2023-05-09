@@ -1,8 +1,9 @@
-﻿using CatalogService.Application.Features.Categories.Dtos;
+﻿using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Requests.Product;
 using CatalogService.Application.Features.Products.Commands.CreateProduct;
 using CatalogService.Application.Features.Products.Commands.DeleteProduct;
 using CatalogService.Application.Features.Products.Commands.UpdateProduct;
-using CatalogService.Application.Features.Products.Dtos;
+using CatalogService.Application.Features.Products.Queries.GetProductsByCategoryId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,27 +18,37 @@ public class ProductsController : ControllerBase {
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(CreateProductDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Create(CreateProductRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new CreateProductCommand() {
-			CreateProduct = request
+			CreateProductRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
 
 	[HttpPut("{id.Value}")]
-	public async Task<IActionResult> Update([FromRoute] CategoryIdDto id, [FromBody] UpdateProductDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Update(
+		[FromRoute] CategoryIdRequest id,
+		[FromBody] UpdateProductRequest request,
+		CancellationToken cancellationToken) {
 		request.Id = id.Value;
 		await this.sender.Send(new UpdateProductCommand() {
-			UpdateProduct = request
+			UpdateProductRequest = request
 		}, cancellationToken);
 		return this.Ok();
 	}
 
 	[HttpDelete("{request.id}")]
-	public async Task<IActionResult> Delete([FromRoute] DeleteProductDto request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Delete([FromRoute] DeleteProductRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new DeleteProductCommand() {
-			DeleteProduct = request
+			DeleteProductRequest = request
 		}, cancellationToken);
 		return this.Ok();
+	}
+
+	[HttpGet("{request.CategoryId}")]
+	public async Task<IActionResult> GetByCategoryId(
+		[FromRoute] GetProductsByCategoryIdQuery request,
+		CancellationToken cancellationToken) {
+		return this.Ok(await this.sender.Send(request, cancellationToken));
 	}
 }

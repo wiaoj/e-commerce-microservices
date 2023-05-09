@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
-using CatalogService.Application.Features.Categories.Dtos;
+using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Responses.Category;
+using CatalogService.Application.Dtos.Responses.Product;
 using CatalogService.Domain.Entities;
 
 namespace CatalogService.Persistence.MappingProfiles;
 internal sealed class CategoryProfile : Profile {
 	public CategoryProfile() {
-		this.CreateMap<CreateCategoryDto, CategoryEntity>();
-		this.CreateMap<UpdateCategoryDto, CategoryEntity>();
+		this.CreateMap<CreateCategoryRequest, CategoryEntity>();
+		this.CreateMap<UpdateCategoryRequest, CategoryEntity>();
 
-		this.CreateMap<CategoryEntity, GetCategoryDto>();
+		this.CreateMap<CategoryEntity, GetCategoryResponse>();
 
-		this.CreateMap<CategoryEntity, GetCategoriesDto>();
+		this.CreateMap<CategoryEntity, GetCategoriesResponse>();
 
-		this.CreateMap<CategoryEntity, GetCategoryWithProductsDto>()
+		this.CreateMap<CategoryEntity, GetCategoryWithProductsResponse>()
 			.ForMember(dest => dest.Products, opt => opt.Ignore());
 	}
 }

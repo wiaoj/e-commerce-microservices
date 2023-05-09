@@ -1,5 +1,5 @@
 ﻿using CatalogService.Application.Common.JsonConverters;
-using CatalogService.Application.Features.Categories.Dtos;
+using CatalogService.Application.Dtos.Responses.Category;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -14,7 +14,7 @@ public static class DependencyInjection {
 	}
 
 	public static IList<JsonConverter> AddApplicationJsonConverters(this IList<JsonConverter> converters) {
-		converters.Add(new IgnoreEmptyListConverter<GetCategoryDto>());
+		converters.Add(new IgnoreEmptyListConverter<GetCategoryResponse>());
 		return converters;
 	}
 }
