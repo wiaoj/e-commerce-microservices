@@ -3,6 +3,7 @@ using CatalogService.Application.Features.Products.Commands.CreateProduct;
 using CatalogService.Application.Features.Products.Commands.DeleteProduct;
 using CatalogService.Application.Features.Products.Commands.UpdateProduct;
 using CatalogService.Application.Features.Products.Dtos;
+using CatalogService.Application.Features.Products.Queries.GetProductsByCategoryId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,5 +40,10 @@ public class ProductsController : ControllerBase {
 			DeleteProduct = request
 		}, cancellationToken);
 		return this.Ok();
+	}
+
+	[HttpGet("{request.categoryId}")]
+	public async Task<IActionResult> Delete([FromRoute] GetProductsByCategoryIdQuery request, CancellationToken cancellationToken) {
+		return this.Ok(await this.sender.Send(request, cancellationToken));
 	}
 }

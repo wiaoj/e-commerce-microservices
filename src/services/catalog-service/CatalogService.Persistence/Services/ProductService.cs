@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using BuildingBlocks.Application.Abstraction.Pagination;
+using BuildingBlocks.Application.Pagination;
 using BuildingBlocks.Persistence.EFCore.Parameters;
 using CatalogService.Application.Features.Products.Dtos;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace CatalogService.Persistence.Services;
 internal sealed class ProductService : IProductService {
@@ -28,7 +29,7 @@ internal sealed class ProductService : IProductService {
 		CancellationToken cancellationToken) {
 		ProductEntity product = this.mapper.Map<ProductEntity>(createProductDto);
 
-		await AddProductCategoriesIfExistsAsync(createProductDto.CategoryIds, product, cancellationToken);
+		await this.AddProductCategoriesIfExistsAsync(createProductDto.CategoryIds, product, cancellationToken);
 
 		Task.WaitAll(new Task[2] {
 			this.productWriteRepository.AddAsync(product, cancellationToken).AsTask(),
@@ -51,6 +52,11 @@ internal sealed class ProductService : IProductService {
 		}, cancellationToken);
 	}
 
+	public async Task<IPaginate<GetProductDto>> GetProductsByCategoryId(Guid categoryId, CancellationToken cancellationToken) {
+		IPaginate<ProductEntity> products = await this.productReadRepository.GetProductsByCategoryId(categoryId, cancellationToken);
+		return this.mapper.Map<Paginate<GetProductDto>>(products);
+	}
+
 	public async Task UpdateProductAsync(UpdateProductDto updateProductDto, CancellationToken cancellationToken) {
 		ProductEntity? product = await this.productReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
@@ -61,7 +67,7 @@ internal sealed class ProductService : IProductService {
 
 		ProductEntity updatedCategory = this.mapper.Map(updateProductDto, product);
 
-		await AddProductCategoriesIfExistsAsync(updateProductDto.CategoryIds, updatedCategory, cancellationToken);
+		await this.AddProductCategoriesIfExistsAsync(updateProductDto.CategoryIds, updatedCategory, cancellationToken);
 
 		Task.WaitAll(new Task[2] {
 			this.productWriteRepository.UpdateAsync(updatedCategory, cancellationToken).AsTask(),
@@ -71,15 +77,7 @@ internal sealed class ProductService : IProductService {
 
 	private async Task AddProductCategoriesIfExistsAsync(IEnumerable<Guid>? categoryIds, ProductEntity product, CancellationToken cancellationToken) {
 		if(categoryIds?.Any() is true) {
-			GetListParameters<CategoryEntity> parameters = new() {
-				CancellationToken = cancellationToken,
-				EnableTracking = true,
-				//Predicate = category => updateProductDto.Categories.SelectMany(x => x.Id == category.Id)
-				Predicate = x => categoryIds!.Contains(x.Id)
-			};
-
-			//IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetCategoriesWithCategoryIds(updateProductDto.CategoryIds, cancellationToken);
-			IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetListAsync(parameters);
+			IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetCategoriesWithCategoryIds(categoryIds, cancellationToken);
 			ArgumentNullException.ThrowIfNull(categories, "Kategori bulunamadı!");
 			product.AddRangeCategories(categories);
 		}
