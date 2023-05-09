@@ -1,20 +1,21 @@
-﻿using CatalogService.Application.Features.Categories.Dtos;
+﻿using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Responses.Category;
 using CatalogService.Application.Services;
 using MediatR;
 
 namespace CatalogService.Application.Features.Categories.Queries.GetCategory;
-public sealed record GetCategoryQuery : IRequest<GetCategoryDto> {
-	public required CategoryIdDto Id { get; set; }
+public sealed record GetCategoryQuery : IRequest<GetCategoryResponse> {
+	public required CategoryIdRequest CategoryIdRequest { get; set; }
 
-	private class Handler : IRequestHandler<GetCategoryQuery, GetCategoryDto> {
+	private class Handler : IRequestHandler<GetCategoryQuery, GetCategoryResponse> {
 		private readonly ICategoryService categoryService;
 
 		public Handler(ICategoryService categoryService) {
 			this.categoryService = categoryService;
 		}
 
-		public Task<GetCategoryDto> Handle(GetCategoryQuery request, CancellationToken cancellationToken) {
-			return this.categoryService.GetCategoryAsync(request.Id, cancellationToken);
+		public Task<GetCategoryResponse> Handle(GetCategoryQuery request, CancellationToken cancellationToken) {
+			return this.categoryService.GetCategoryAsync(request.CategoryIdRequest, cancellationToken);
 		}
 	}
 }

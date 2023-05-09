@@ -1,10 +1,10 @@
-﻿using CatalogService.Application.Features.Products.Dtos;
+﻿using CatalogService.Application.Dtos.Requests.Product;
 using CatalogService.Application.Services;
 using MediatR;
 
 namespace CatalogService.Application.Features.Products.Commands.CreateProduct;
 public sealed record CreateProductCommand : IRequest<Unit> {
-	public required CreateProductDto CreateProduct { get; set; }
+	public required CreateProductRequest CreateProductRequest { get; set; }
 
 	private sealed class Handler : IRequestHandler<CreateProductCommand, Unit> {
 		private readonly IProductService productService;
@@ -14,7 +14,7 @@ public sealed record CreateProductCommand : IRequest<Unit> {
 		}
 
 		public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken) {
-			await this.productService.AddProductAsync(request.CreateProduct, cancellationToken);
+			await this.productService.AddProductAsync(request.CreateProductRequest, cancellationToken);
 
 			return Unit.Value;
 		}

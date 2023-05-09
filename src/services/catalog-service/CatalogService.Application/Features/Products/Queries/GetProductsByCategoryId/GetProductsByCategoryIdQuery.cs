@@ -1,20 +1,21 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
-using CatalogService.Application.Features.Products.Dtos;
+using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Responses.Product;
 using CatalogService.Application.Services;
 using MediatR;
 
 namespace CatalogService.Application.Features.Products.Queries.GetProductsByCategoryId;
-public sealed record GetProductsByCategoryIdQuery : IRequest<IPaginate<GetProductDto>> {
-	public required Guid CategoryId { get; set; }
+public sealed record GetProductsByCategoryIdQuery : IRequest<IPaginate<GetProductResponse>> {
+	public required CategoryIdRequest CategoryId { get; set; }
 
-	private sealed class Handler : IRequestHandler<GetProductsByCategoryIdQuery, IPaginate<GetProductDto>> {
+	private sealed class Handler : IRequestHandler<GetProductsByCategoryIdQuery, IPaginate<GetProductResponse>> {
 		private readonly IProductService productService;
 
 		public Handler(IProductService productService) {
 			this.productService = productService;
 		}
 
-		public async Task<IPaginate<GetProductDto>> Handle(GetProductsByCategoryIdQuery request, CancellationToken cancellationToken) {
+		public async Task<IPaginate<GetProductResponse>> Handle(GetProductsByCategoryIdQuery request, CancellationToken cancellationToken) {
 			return await this.productService.GetProductsByCategoryId(request.CategoryId, cancellationToken);
 		}
 	}

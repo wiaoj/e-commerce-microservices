@@ -2,12 +2,13 @@
 using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
 using BuildingBlocks.Persistence.EFCore.Parameters;
-using CatalogService.Application.Features.Categories.Dtos;
-using CatalogService.Application.Features.Products.Dtos;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using CatalogService.Application.Dtos.Responses.Category;
+using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Responses.Product;
 
 namespace CatalogService.Persistence.Services;
 internal sealed class CategoryService : ICategoryService {
@@ -26,19 +27,21 @@ internal sealed class CategoryService : ICategoryService {
 		this.productReadRepository = productReadRepository;
 	}
 
-	public async Task AddCategoryAsync(CreateCategoryDto createCategoryDto, CancellationToken cancellationToken) {
-		if(createCategoryDto.ParentCategoryId is not null) {
+	public async Task AddCategoryAsync(
+		CreateCategoryRequest createCategoryRequest,
+		CancellationToken cancellationToken) {
+		if(createCategoryRequest.ParentCategoryId is not null) {
 			GetParameters<CategoryEntity> parameters = new() {
 				CancellationToken = cancellationToken,
 				EnableTracking = true,
-				Predicate = x => x.Id == createCategoryDto.ParentCategoryId,
+				Predicate = x => x.Id == createCategoryRequest.ParentCategoryId,
 			};
 
 			CategoryEntity? parentCategory = await this.categoryReadRepository.GetAsync(parameters);
 			ArgumentNullException.ThrowIfNull(parentCategory, "Üst kategori bulunamadı!");
 		}
 
-		CategoryEntity category = this.mapper.Map<CategoryEntity>(createCategoryDto);
+		CategoryEntity category = this.mapper.Map<CategoryEntity>(createCategoryRequest);
 
 		Task.WaitAll(new Task[2] {
 			this.categoryWriteRepository.AddAsync(category, cancellationToken).AsTask(),
@@ -46,7 +49,7 @@ internal sealed class CategoryService : ICategoryService {
 		}, cancellationToken);
 	}
 
-	public async Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken) {
+	public async Task<IPaginate<GetCategoriesResponse>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken) {
 		GetPaginatedListParameters<CategoryEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
@@ -56,36 +59,38 @@ internal sealed class CategoryService : ICategoryService {
 			},
 			OrderBy = x => x.OrderBy(x => x.Name),
 		};
-		IPaginate<CategoryEntity> categories = await this.categoryReadRepository.GetPaginatedListAsync(parameters);
-		IPaginate<GetCategoriesDto> mappedCategories = this.mapper.Map<Paginate<GetCategoriesDto>>(categories);
+		IPaginate<CategoryEntity> categories = 
+			await this.categoryReadRepository.GetPaginatedListAsync(parameters);
+		IPaginate<GetCategoriesResponse> mappedCategories = 
+			this.mapper.Map<Paginate<GetCategoriesResponse>>(categories);
 		return mappedCategories;
 	}
 
-	public async Task<GetCategoryDto> GetCategoryAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken) {
+	public async Task<GetCategoryResponse> GetCategoryAsync(CategoryIdRequest categoryIdRequest, CancellationToken cancellationToken) {
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
-			Predicate = x => x.Id == categoryIdDto.Value,
+			Predicate = x => x.Id == categoryIdRequest.Value,
 			Include = x => x.Include(x => x.ChildCategories)
 		});
 
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
-		return this.mapper.Map<GetCategoryDto>(category);
+		return this.mapper.Map<GetCategoryResponse>(category);
 	}
 
-	public async Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto, CancellationToken cancellationToken) {
+	public async Task UpdateCategoryAsync(UpdateCategoryRequest updateCategoryRequest, CancellationToken cancellationToken) {
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = true,
-			Predicate = x => x.Id == updateCategoryDto.Id,
+			Predicate = x => x.Id == updateCategoryRequest.Id,
 		});
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
 
-		if(updateCategoryDto.ParentCategoryId is not null) {
+		if(updateCategoryRequest.ParentCategoryId is not null) {
 			GetParameters<CategoryEntity> parameters = new() {
 				CancellationToken = cancellationToken,
 				EnableTracking = true,
-				Predicate = x => x.Id == updateCategoryDto.ParentCategoryId,
+				Predicate = x => x.Id == updateCategoryRequest.ParentCategoryId,
 			};
 
 			CategoryEntity? parentCategory = await this.categoryReadRepository.GetAsync(parameters);
@@ -93,18 +98,18 @@ internal sealed class CategoryService : ICategoryService {
 			category.SetParentCategory(parentCategory);
 		}
 
-		CategoryEntity updatedCategory = this.mapper.Map(updateCategoryDto, category);
+		CategoryEntity updatedCategory = this.mapper.Map(updateCategoryRequest, category);
 		Task.WaitAll(new Task[2] {
 			this.categoryWriteRepository.UpdateAsync(updatedCategory, cancellationToken).AsTask(),
 			this.categoryWriteRepository.SaveChangesAsync(cancellationToken),
 		}, cancellationToken);
 	}
 
-	public async Task DeleteCategoryAsync(DeleteCategoryDto deleteCategoryDto, CancellationToken cancellationToken) {
+	public async Task DeleteCategoryAsync(DeleteCategoryRequest deleteCategoryRequest, CancellationToken cancellationToken) {
 		GetParameters<CategoryEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = true,
-			Predicate = x => x.Id == deleteCategoryDto.Id,
+			Predicate = x => x.Id == deleteCategoryRequest.Id,
 		};
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(parameters);
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
@@ -115,23 +120,25 @@ internal sealed class CategoryService : ICategoryService {
 		}, cancellationToken);
 	}
 
-	public async Task<GetCategoryWithProductsDto> GetCategoryWithProductsAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken) {
+	public async Task<GetCategoryWithProductsResponse> GetCategoryWithProductsAsync(CategoryIdRequest categoryIdRequest, CancellationToken cancellationToken) {
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
-			Predicate = x => x.Id == categoryIdDto.Value,
+			Predicate = x => x.Id == categoryIdRequest.Value,
 			//Include = x => x.Include(x => x.Products)
 		});
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
 		IPaginate<ProductEntity> products = 
 			await this.productReadRepository.GetProductsByCategoryId(
-				categoryIdDto.Value,
+				categoryIdRequest.Value,
 				cancellationToken);
 
-		GetCategoryWithProductsDto mappedGetCategoryWithProductsDto = 
-			this.mapper.Map<GetCategoryWithProductsDto>(category);
-		IPaginate<GetProductDto> mappedPaginatedProducts = this.mapper.Map<Paginate<GetProductDto>>(products); ;
-		mappedGetCategoryWithProductsDto.Products = mappedPaginatedProducts;
-		return mappedGetCategoryWithProductsDto;
+		GetCategoryWithProductsResponse mappedGetCategoryWithProductsRequest = 
+			this.mapper.Map<GetCategoryWithProductsResponse>(category);
+		IPaginate<GetProductResponse> mappedPaginatedProducts = 
+			this.mapper.Map<Paginate<GetProductResponse>>(products);
+
+		mappedGetCategoryWithProductsRequest.Products = mappedPaginatedProducts;
+		return mappedGetCategoryWithProductsRequest;
 	}
 }

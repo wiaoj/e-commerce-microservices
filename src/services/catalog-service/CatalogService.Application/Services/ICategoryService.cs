@@ -1,13 +1,26 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
-using CatalogService.Application.Features.Categories.Dtos;
+using CatalogService.Application.Dtos.Requests.Category;
+using CatalogService.Application.Dtos.Responses.Category;
 
 namespace CatalogService.Application.Services;
 public interface ICategoryService {
-	public Task AddCategoryAsync(CreateCategoryDto createCategoryDto, CancellationToken cancellationToken);
-	public Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto, CancellationToken cancellationToken);
-	public Task DeleteCategoryAsync(DeleteCategoryDto deleteCategoryDto, CancellationToken cancellationToken);
-	public Task<IPaginate<GetCategoriesDto>> GetCategoriesAsync(PaginationRequest paginationRequest, CancellationToken cancellationToken);
-	public Task<GetCategoryDto> GetCategoryAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken);
-	public Task<GetCategoryWithProductsDto> GetCategoryWithProductsAsync(CategoryIdDto categoryIdDto, CancellationToken cancellationToken);
+	public Task AddCategoryAsync(
+		CreateCategoryRequest createCategoryRequest,
+		CancellationToken cancellationToken);
+	public Task UpdateCategoryAsync(
+		UpdateCategoryRequest updateCategoryRequest,
+		CancellationToken cancellationToken);
+	public Task DeleteCategoryAsync(
+		DeleteCategoryRequest deleteCategoryRequest,
+		CancellationToken cancellationToken);
+	public Task<IPaginate<GetCategoriesResponse>> GetCategoriesAsync(
+		PaginationRequest paginationRequest,
+		CancellationToken cancellationToken);
+	public Task<GetCategoryResponse> GetCategoryAsync(
+		CategoryIdRequest categoryIdRequest,
+		CancellationToken cancellationToken);
+	public Task<GetCategoryWithProductsResponse> GetCategoryWithProductsAsync(
+		CategoryIdRequest categoryIdRequest,
+		CancellationToken cancellationToken);
 }
