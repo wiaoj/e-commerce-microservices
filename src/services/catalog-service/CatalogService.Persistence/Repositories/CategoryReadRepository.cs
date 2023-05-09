@@ -11,6 +11,11 @@ public sealed class CategoryReadRepository : EFAsyncReadRepository<CategoryEntit
 		IEnumerable<Guid> categoryIds,
 		CancellationToken cancellationToken) {
 		cancellationToken.ThrowIfCancellationRequested();
-		return Task.FromResult(this.EntityTable.Where(x => categoryIds.Contains(x.Id)));
+		return this.GetListAsync(new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			OrderBy = x => x.OrderBy(category => category.Name),
+			Predicate = x => categoryIds.Any(categoryId => categoryId == x.Id)
+		});
 	}
 }

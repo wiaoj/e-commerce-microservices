@@ -12,6 +12,7 @@ internal sealed class CategoryProfile : Profile {
 
 		this.CreateMap<CategoryEntity, GetCategoriesDto>();
 
-		this.CreateMap<CategoryEntity, GetCategoryWithProductsDto>();
+		this.CreateMap<CategoryEntity, GetCategoryWithProductsDto>()
+			.ForMember(dest => dest.Products, opt => opt.Ignore());
 	}
 }

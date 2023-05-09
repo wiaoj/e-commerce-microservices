@@ -3,6 +3,7 @@ using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
 using BuildingBlocks.Persistence.EFCore.Parameters;
 using CatalogService.Application.Features.Categories.Dtos;
+using CatalogService.Application.Features.Products.Dtos;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;
@@ -13,13 +14,16 @@ internal sealed class CategoryService : ICategoryService {
 	private readonly ICategoryWriteRepository categoryWriteRepository;
 	private readonly ICategoryReadRepository categoryReadRepository;
 	private readonly IMapper mapper;
+	private readonly IProductReadRepository productReadRepository;
 
 	public CategoryService(ICategoryWriteRepository categoryWriteRepository,
 						ICategoryReadRepository categoryReadRepository,
-						IMapper mapper) {
+						IMapper mapper,
+						IProductReadRepository productReadRepository) {
 		this.categoryWriteRepository = categoryWriteRepository;
 		this.categoryReadRepository = categoryReadRepository;
 		this.mapper = mapper;
+		this.productReadRepository = productReadRepository;
 	}
 
 	public async Task AddCategoryAsync(CreateCategoryDto createCategoryDto, CancellationToken cancellationToken) {
@@ -116,10 +120,18 @@ internal sealed class CategoryService : ICategoryService {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
 			Predicate = x => x.Id == categoryIdDto.Value,
-			Include = x => x.Include(x => x.Products)
+			//Include = x => x.Include(x => x.Products)
 		});
-
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
-		return this.mapper.Map<GetCategoryWithProductsDto>(category);
+		IPaginate<ProductEntity> products = 
+			await this.productReadRepository.GetProductsByCategoryId(
+				categoryIdDto.Value,
+				cancellationToken);
+
+		GetCategoryWithProductsDto mappedGetCategoryWithProductsDto = 
+			this.mapper.Map<GetCategoryWithProductsDto>(category);
+		IPaginate<GetProductDto> mappedPaginatedProducts = this.mapper.Map<Paginate<GetProductDto>>(products); ;
+		mappedGetCategoryWithProductsDto.Products = mappedPaginatedProducts;
+		return mappedGetCategoryWithProductsDto;
 	}
 }
