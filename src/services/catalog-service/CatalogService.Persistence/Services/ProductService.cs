@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BuildingBlocks.Persistence.EFCore.Parameters;
-using CatalogService.Application.Features.Categories.Dtos;
 using CatalogService.Application.Features.Products.Dtos;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;

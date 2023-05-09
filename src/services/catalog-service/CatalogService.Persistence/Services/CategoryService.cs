@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Application.Pagination;
-using BuildingBlocks.Persistence.EFCore.Extensions;
 using BuildingBlocks.Persistence.EFCore.Parameters;
 using CatalogService.Application.Features.Categories.Dtos;
-using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProducts;
 using CatalogService.Application.Services;
 using CatalogService.Domain.Entities;
 using CatalogService.Persistence.Repositories.Interfaces;

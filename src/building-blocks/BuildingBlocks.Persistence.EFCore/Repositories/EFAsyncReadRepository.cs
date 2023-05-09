@@ -1,7 +1,7 @@
 ﻿using BuildingBlocks.Application.Abstraction.Pagination;
 using BuildingBlocks.Domain;
-using BuildingBlocks.Persistence.EFCore.Parameters;
 using BuildingBlocks.Persistence.EFCore.Extensions;
+using BuildingBlocks.Persistence.EFCore.Parameters;
 using BuildingBlocks.Persistence.EFCore.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

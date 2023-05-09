@@ -1,5 +1,4 @@
-﻿using BuildingBlocks.Domain;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BuildingBlocks.Persistence.EFCore.Repositories;
 public abstract class EFRepository<TContext> where TContext : DbContext {

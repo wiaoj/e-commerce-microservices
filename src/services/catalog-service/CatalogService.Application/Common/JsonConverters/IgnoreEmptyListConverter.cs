@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using System.Text.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CatalogService.Application.Common.JsonConverters;
 public class IgnoreEmptyListConverter<T> : JsonConverter<List<T>> where T : class {
