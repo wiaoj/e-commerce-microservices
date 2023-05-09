@@ -22,5 +22,6 @@ public interface ICategoryService {
 		CancellationToken cancellationToken);
 	public Task<GetCategoryWithProductsResponse> GetCategoryWithProductsAsync(
 		CategoryIdRequest categoryIdRequest,
+		PaginationRequest paginationRequest,
 		CancellationToken cancellationToken);
 }

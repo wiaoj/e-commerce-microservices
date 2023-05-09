@@ -120,25 +120,26 @@ internal sealed class CategoryService : ICategoryService {
 		}, cancellationToken);
 	}
 
-	public async Task<GetCategoryWithProductsResponse> GetCategoryWithProductsAsync(CategoryIdRequest categoryIdRequest, CancellationToken cancellationToken) {
+	public async Task<GetCategoryWithProductsResponse> GetCategoryWithProductsAsync(
+		CategoryIdRequest categoryIdRequest,
+		PaginationRequest paginationRequest,
+		CancellationToken cancellationToken) {
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = false,
 			Predicate = x => x.Id == categoryIdRequest.Value,
-			//Include = x => x.Include(x => x.Products)
 		});
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
 		IPaginate<ProductEntity> products = 
 			await this.productReadRepository.GetProductsByCategoryId(
 				categoryIdRequest.Value,
+				paginationRequest,
 				cancellationToken);
 
 		GetCategoryWithProductsResponse mappedGetCategoryWithProductsRequest = 
-			this.mapper.Map<GetCategoryWithProductsResponse>(category);
-		IPaginate<GetProductResponse> mappedPaginatedProducts = 
-			this.mapper.Map<Paginate<GetProductResponse>>(products);
-
-		mappedGetCategoryWithProductsRequest.Products = mappedPaginatedProducts;
+			this.mapper.Map<GetCategoryWithProductsResponse>(category) with {
+				Products = this.mapper.Map<Paginate<GetProductResponse>>(products)
+			};
 		return mappedGetCategoryWithProductsRequest;
 	}
 }

@@ -56,10 +56,12 @@ internal sealed class ProductService : IProductService {
 
 	public async Task<IPaginate<GetProductResponse>> GetProductsByCategoryId(
 		CategoryIdRequest categoryIdRequest,
+		PaginationRequest paginationRequest,
 		CancellationToken cancellationToken) {
 		IPaginate<ProductEntity> products = 
 			await this.productReadRepository.GetProductsByCategoryId(
 				categoryIdRequest.Value,
+				paginationRequest,
 				cancellationToken);
 		return this.mapper.Map<Paginate<GetProductResponse>>(products);
 	}
