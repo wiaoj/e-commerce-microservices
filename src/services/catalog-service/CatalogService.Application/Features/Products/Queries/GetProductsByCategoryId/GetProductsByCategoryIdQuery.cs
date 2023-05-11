@@ -10,6 +10,7 @@ public sealed record GetProductsByCategoryIdQuery : IRequest<IPaginate<GetProduc
 	public required CategoryIdRequest CategoryId { get; set; }
 	public required PaginationRequest PaginationRequest { get; set; }
 
+
 	private sealed class Handler : IRequestHandler<GetProductsByCategoryIdQuery, IPaginate<GetProductResponse>> {
 		private readonly IProductService productService;
 

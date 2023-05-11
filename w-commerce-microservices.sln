@@ -33,6 +33,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CatalogService.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalogService.Application.Dtos", "src\services\catalog-service\CatalogService.Application.Dtos\CatalogService.Application.Dtos.csproj", "{8AF1726C-F5C2-46F8-97EB-7C5A9E64EA63}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "image-service", "image-service", "{705864DA-B923-4992-A347-B8B476EE9344}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.Application", "src\services\image-service\ImageService.Application\ImageService.Application.csproj", "{694317DA-EE91-49D6-8447-79CBDE13832B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.Domain", "src\services\image-service\ImageService.Domain\ImageService.Domain.csproj", "{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.Persistence", "src\services\image-service\ImageService.Persistence\ImageService.Persistence.csproj", "{5A925F0B-7330-484A-906C-61679103ADBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageService.WebAPI", "src\services\image-service\ImageService.WebAPI\ImageService.WebAPI.csproj", "{FA19874D-057F-4B69-8104-5FCA5AD73C7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +93,22 @@ Global
 		{8AF1726C-F5C2-46F8-97EB-7C5A9E64EA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AF1726C-F5C2-46F8-97EB-7C5A9E64EA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AF1726C-F5C2-46F8-97EB-7C5A9E64EA63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{694317DA-EE91-49D6-8447-79CBDE13832B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694317DA-EE91-49D6-8447-79CBDE13832B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694317DA-EE91-49D6-8447-79CBDE13832B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694317DA-EE91-49D6-8447-79CBDE13832B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A925F0B-7330-484A-906C-61679103ADBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A925F0B-7330-484A-906C-61679103ADBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A925F0B-7330-484A-906C-61679103ADBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A925F0B-7330-484A-906C-61679103ADBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA19874D-057F-4B69-8104-5FCA5AD73C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA19874D-057F-4B69-8104-5FCA5AD73C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA19874D-057F-4B69-8104-5FCA5AD73C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA19874D-057F-4B69-8104-5FCA5AD73C7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +128,11 @@ Global
 		{3D48ABDE-749E-4A88-96E0-CCDB71A6E2CE} = {F2206E2E-D2E2-4B93-AC7D-0AA3023487F0}
 		{744821B7-9F91-474F-922F-D334CD7556DC} = {F2206E2E-D2E2-4B93-AC7D-0AA3023487F0}
 		{8AF1726C-F5C2-46F8-97EB-7C5A9E64EA63} = {F2206E2E-D2E2-4B93-AC7D-0AA3023487F0}
+		{705864DA-B923-4992-A347-B8B476EE9344} = {4E33A607-6362-44E7-9080-A003F2518773}
+		{694317DA-EE91-49D6-8447-79CBDE13832B} = {705864DA-B923-4992-A347-B8B476EE9344}
+		{B9AB7FDA-36E6-482B-A0EC-D0FEDE8BA88B} = {705864DA-B923-4992-A347-B8B476EE9344}
+		{5A925F0B-7330-484A-906C-61679103ADBD} = {705864DA-B923-4992-A347-B8B476EE9344}
+		{FA19874D-057F-4B69-8104-5FCA5AD73C7B} = {705864DA-B923-4992-A347-B8B476EE9344}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF40C83F-7D2E-4CCC-9265-4BCDECDCFB22}
