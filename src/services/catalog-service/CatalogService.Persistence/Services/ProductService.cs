@@ -69,11 +69,12 @@ internal sealed class ProductService : IProductService {
 	public async Task UpdateProductAsync(
 		UpdateProductRequest updateProductRequest,
 		CancellationToken cancellationToken) {
-		ProductEntity? product = await this.productReadRepository.GetAsync(new() {
+		GetParameters<ProductEntity> parameters = new() {
 			CancellationToken = cancellationToken,
 			EnableTracking = true,
 			Predicate = x => x.Id == updateProductRequest.Id,
-		});
+		};
+		ProductEntity? product = await this.productReadRepository.GetAsync(parameters);
 		ArgumentNullException.ThrowIfNull(product, "Ürün bulunamadı!");
 
 		ProductEntity updatedCategory = this.mapper.Map(updateProductRequest, product);
@@ -94,7 +95,8 @@ internal sealed class ProductService : IProductService {
 		ProductEntity product,
 		CancellationToken cancellationToken) {
 		if(categoryIds?.Any() is true) {
-			IQueryable<CategoryEntity> categories = await this.categoryReadRepository.GetCategoriesWithCategoryIds(categoryIds, cancellationToken);
+			IQueryable<CategoryEntity> categories = 
+				await this.categoryReadRepository.GetCategoriesWithCategoryIds(categoryIds, cancellationToken);
 			ArgumentNullException.ThrowIfNull(categories, "Kategori bulunamadı!");
 			product.AddRangeCategories(categories);
 		}
