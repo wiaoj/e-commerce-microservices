@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\building-blocks\BuildingBlocks.Persistence.EFCore.MSSQL\BuildingBlocks.Persistence.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\..\..\building-blocks\BuildingBlocks.Persistence.EFCore\BuildingBlocks.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\ImageService.Application\ImageService.Application.csproj" />
     <ProjectReference Include="..\ImageService.Domain\ImageService.Domain.csproj" />
   </ItemGroup>
 

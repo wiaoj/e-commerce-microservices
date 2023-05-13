@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ImageService.Application.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ImageService.WebAPI.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class ImagesController : ControllerBase {
+public class ProductImagesController : ControllerBase {
+	private readonly IProductImageService productImageService;
+
+	public ProductImagesController(IProductImageService productImageService) {
+		this.productImageService = productImageService;
+	}
 
 	[HttpPost]
 	[Route("{productId}")]
-	public async Task<IActionResult> Upload([FromRoute] Guid productId, IFormFile image, CancellationToken cancellationToken) {
-		await Task.CompletedTask;
+	public async Task<IActionResult> Upload([FromRoute] Guid productId, IFormFileCollection images, CancellationToken cancellationToken) {
+		await this.productImageService.UploadImages(new(productId, images), cancellationToken);
 		return this.Ok();
 	}
 
@@ -33,6 +39,16 @@ public class ImagesController : ControllerBase {
 	[Route("{imageId}")]
 	public async Task<IActionResult> GetImage([FromRoute] Guid imageId, CancellationToken cancellationToken) {
 		await Task.CompletedTask;
+		return this.Ok();
+	}
+
+	[HttpPost]
+	[Route("{productId}/{imageId}")]
+	public async Task<IActionResult> SetShowcase(
+		[FromRoute] Guid productId,
+		[FromRoute] Guid imageId,
+		CancellationToken cancellationToken) {
+		await this.productImageService.SetShowcase(productId, imageId, cancellationToken);
 		return this.Ok();
 	}
 

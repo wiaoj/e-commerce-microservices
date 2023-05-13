@@ -1,5 +1,9 @@
 ﻿using BuildingBlocks.Persistence.EFCore.MSSQL;
+using ImageService.Application.Services;
 using ImageService.Persistence.Contexts;
+using ImageService.Persistence.Repositories;
+using ImageService.Persistence.Repositories.Interfaces;
+using ImageService.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -31,18 +35,20 @@ public static class DependencyInjection {
 		services.BuildServiceProvider().GetRequiredService<ImageServiceDbContext>().Database.Migrate();
 
 		services.AddServices()
-			.AddRepositories();
+				.AddRepositories();
 
 		return services;
 	}
 
 	private static IServiceCollection AddServices(this IServiceCollection services) {
-
-		return services;
+		return services.AddScoped<IProductService, ProductService>()
+					   .AddScoped<IProductImageService, ProductImageService>();
 	}
 
 	private static IServiceCollection AddRepositories(this IServiceCollection services) {
-
-		return services;
+		return services.AddScoped<IProductWriteRepository, ProductWriteRepository>()
+					   .AddScoped<IProductReadRepository, ProductReadRepository>()
+					   .AddScoped<IProductImageWriteRepository, ProductImageWriteRepository>()
+					   .AddScoped<IProductImageReadRepository, ProductImageReadRepository>();
 	}
 }

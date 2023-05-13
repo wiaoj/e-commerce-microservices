@@ -1,4 +1,5 @@
-﻿using BuildingBlocks.Persistence.EFCore.MSSQL;
+﻿using BuildingBlocks.Domain;
+using BuildingBlocks.Persistence.EFCore.MSSQL;
 using ImageService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,17 @@ public sealed class ImageServiceDbContext : MSSQLDbContext {
 				.Ignore(product => product.CreatedAt)
 				.Ignore(product => product.UpdatedAt)
 				.HasMany(product => product.ProductImages)
-				.WithOne(image => image.ProductEntity)
-				.HasForeignKey(image => image.ProductId);
+				.WithOne(productImage => productImage.Product)
+				.HasForeignKey(productImage => productImage.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 		modelBuilder.Entity<ProductImageEntity>()
-				.Ignore(productImage => productImage.CreatedAt)
+				//.Ignore(productImage => productImage.CreatedAt)
 				.Ignore(productImage => productImage.UpdatedAt)
-				.HasOne(productImage => productImage.ProductEntity)
+				.HasOne(productImage => productImage.Product)
 				.WithMany(product => product.ProductImages)
-				.HasForeignKey(productImage => productImage.ProductId);
+				.HasForeignKey(productImage => productImage.ProductId)
+				.OnDelete(DeleteBehavior.Cascade);
 
 		base.OnModelCreating(modelBuilder);
 	}

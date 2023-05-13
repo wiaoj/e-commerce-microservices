@@ -19,7 +19,7 @@ public class ProductsController : ControllerBase {
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Create(CreateProductRequest request, CancellationToken cancellationToken) {
+	public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken cancellationToken) {
 		await this.sender.Send(new CreateProductCommand() {
 			CreateProductRequest = request
 		}, cancellationToken);

@@ -1,10 +1,15 @@
+using ImageService.Infrastructure;
 using ImageService.Persistence;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration)
+				.AddPersistenceServices(builder.Configuration);
 
 builder.Services.AddControllers();
+
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -23,5 +28,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Directory.CreateDirectory("wwwroot/product-images");
+
 
 await app.RunAsync();
