@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\product\media\images\" />
+    <Folder Include="wwwroot\product\media\images\bf6acb11-377c-4733-e417-08db537ef718\" />
   </ItemGroup>
 
 </Project>

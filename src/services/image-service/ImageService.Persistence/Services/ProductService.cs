@@ -42,6 +42,6 @@ internal sealed class ProductService : IProductService {
 
 		IEnumerable<Guid>? imageIds = productEntity.ProductImages.Select(images => images.Id);
 
-		await this.productImageService.DeleteImages(id, imageIds);
+		await this.productImageService.DeleteImages(id, imageIds, cancellationToken);
 	}
 }

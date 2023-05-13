@@ -1,21 +1,21 @@
 ﻿using BuildingBlocks.Persistence.EFCore.Parameters;
 using ImageService.Application.Dtos.Requests;
+using ImageService.Application.Extensions;
 using ImageService.Application.Services;
 using ImageService.Application.Storage;
 using ImageService.Domain.Entities;
 using ImageService.Persistence.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace ImageService.Persistence.Services;
 internal class ProductImageService : IProductImageService {
-	private readonly IStorageService storageService;
+	private readonly ILocalStorage storageService;
 	private readonly IProductImageReadRepository productImageReadRepository;
 	private readonly IProductImageWriteRepository productImageWriteRepository;
 	private readonly IProductReadRepository productReadRepository;
 
 	public ProductImageService(
-		IStorageService storageService,
+		ILocalStorage storageService,
 		IProductImageReadRepository productImageReadRepository,
 		IProductImageWriteRepository productImageWriteRepository,
 		IProductReadRepository productReadRepository) {
@@ -25,12 +25,85 @@ internal class ProductImageService : IProductImageService {
 		this.productReadRepository = productReadRepository;
 	}
 
-	public Task DeleteImage(Guid productId, Guid imageId) {
-		throw new NotImplementedException();
+	public async Task DeleteImage(Guid productId, Guid imageId, CancellationToken cancellationToken) {
+		GetParameters<ProductEntity> productParameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.Id == productId
+		};
+
+		ProductEntity? productEntity = await this.productReadRepository.GetAsync(productParameters);
+		ArgumentNullException.ThrowIfNull(productEntity, "Ürün bulunamadı!");
+
+		GetParameters<ProductImageEntity> productImageParameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.ProductId == productId
+		};
+
+		ProductImageEntity? productImage = await this.productImageReadRepository.GetAsync(productImageParameters);
+		ArgumentNullException.ThrowIfNull(productImage, "Resim bulunamadı!");
+
+		String path = productEntity.Id.WithProductMediaImagesPath();
+		await this.storageService.DeleteAsync(path, productImage.Name);
+
+		await this.productImageWriteRepository.DeleteAsync(productImage, cancellationToken);
+		await this.productImageWriteRepository.SaveChangesAsync(cancellationToken);
+
+		IQueryable<ProductImageEntity> productImagesQueryable = await this.productImageReadRepository.GetListAsync(new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.ProductId == productId
+		});
+
+		if(productImagesQueryable.Any() is false) {
+			await this.storageService.DeletePath(path);
+		}
+		await Task.CompletedTask;
 	}
 
-	public Task DeleteImages(Guid productId, IEnumerable<Guid> imageIds) {
-		throw new NotImplementedException();
+	public async Task DeleteImages(Guid productId, IEnumerable<Guid> imageIds, CancellationToken cancellationToken) {
+		GetParameters<ProductEntity> productParameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.Id == productId
+		};
+
+		ProductEntity? productEntity = await this.productReadRepository.GetAsync(productParameters);
+		ArgumentNullException.ThrowIfNull(productEntity, "Ürün bulunamadı!");
+
+		GetListParameters<ProductImageEntity> productImageParameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.ProductId == productId && imageIds.Any(imageId => imageId == x.Id)
+		};
+
+		IQueryable<ProductImageEntity> productImagesQueryable = await this.productImageReadRepository.GetListAsync(productImageParameters);
+
+		if(productImagesQueryable.Any() is false || productImagesQueryable.Count() != imageIds.Count()) {
+			throw new Exception("Ürün görseli bulunamadı");
+		}
+
+		String path = productEntity.Id.WithProductMediaImagesPath();
+
+		foreach(ProductImageEntity productImage in productImagesQueryable) {
+			await this.storageService.DeleteAsync(path, productImage.Name);
+		}
+
+
+		await this.productImageWriteRepository.DeleteRangeAsync(productImagesQueryable, cancellationToken);
+		await this.productImageWriteRepository.SaveChangesAsync(cancellationToken);
+
+		productImagesQueryable = await this.productImageReadRepository.GetListAsync(new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			Predicate = x => x.ProductId == productId
+		});
+
+		if(productImagesQueryable.Any() is false) {
+			await this.storageService.DeletePath(path);
+		}
+		await Task.CompletedTask;
 	}
 
 	public async Task SetShowcase(Guid productId, Guid imageId, CancellationToken cancellationToken) {
@@ -74,7 +147,7 @@ internal class ProductImageService : IProductImageService {
 
 		List<(String fileName, String path)> uploadedImages =
 			await this.storageService.UploadAsync(
-				$"product/media/images/{requestedProduct.Id}",
+				requestedProduct.Id.WithProductMediaImagesPath(),
 				uploadImageRequest.Images);
 
 		List<ProductImageEntity> uploadedProductImages =

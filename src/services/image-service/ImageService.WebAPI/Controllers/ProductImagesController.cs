@@ -22,7 +22,7 @@ public class ProductImagesController : ControllerBase {
 	[HttpDelete]
 	[Route("{productId}/{imageId}")]
 	public async Task<IActionResult> Delete([FromRoute] Guid productId, [FromRoute] Guid imageId, CancellationToken cancellationToken) {
-		await Task.CompletedTask;
+		await this.productImageService.DeleteImage(productId, imageId, cancellationToken);
 		return this.Ok();
 	}
 
@@ -31,7 +31,7 @@ public class ProductImagesController : ControllerBase {
 	public async Task<IActionResult> Delete([FromRoute] Guid productId,
 										 [FromBody] IEnumerable<Guid> imageIds,
 										 CancellationToken cancellationToken) {
-		await Task.CompletedTask;
+		await this.productImageService.DeleteImages(productId, imageIds, cancellationToken);
 		return this.Ok();
 	}
 

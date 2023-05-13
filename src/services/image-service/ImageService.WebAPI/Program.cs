@@ -29,7 +29,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Directory.CreateDirectory("wwwroot/product-images");
-
-
 await app.RunAsync();
