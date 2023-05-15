@@ -55,7 +55,6 @@ public class ProductImagesController : ControllerBase {
 	[HttpGet]
 	[Route("[action]/{productId}")]
 	public async Task<IActionResult> GetImagesByProductId([FromRoute] Guid productId, CancellationToken cancellationToken) {
-		await Task.CompletedTask;
-		return this.Ok();
+		return this.Ok(await this.productImageService.GetImagesByProductId(productId, cancellationToken));
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Persistence.EFCore.Parameters;
 using ImageService.Application.Dtos.Requests;
+using ImageService.Application.Dtos.Responses;
 using ImageService.Application.Extensions;
 using ImageService.Application.Services;
 using ImageService.Application.Storage;
@@ -104,6 +105,25 @@ internal class ProductImageService : IProductImageService {
 			await this.storageService.DeletePath(path);
 		}
 		await Task.CompletedTask;
+	}
+
+	public async Task<IEnumerable<ProductImagesResponse>> GetImagesByProductId(Guid productId, CancellationToken cancellationToken) {
+		GetListParameters<ProductImageEntity> parameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			OrderBy = x => x.OrderBy(productImage => productImage.Showcase),
+			Predicate = x => x.ProductId == productId
+		};
+
+		IQueryable<ProductImageEntity> productImages = 
+			await this.productImageReadRepository.GetListAsync(parameters);
+
+		return productImages.ToList().ConvertAll(productImage => new ProductImagesResponse {
+			ProductId = productImage.ProductId,
+			Path = productImage.Path,
+			Name = productImage.Name,
+			Showcase = productImage.Showcase
+		});
 	}
 
 	public async Task SetShowcase(Guid productId, Guid imageId, CancellationToken cancellationToken) {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 
 namespace ImageService.Infrastructure.Extensions;
-public static class Extensions {
+public static class IConfigurationSectionExtensions {
 	public static IConfigurationSection GetStorage(this IConfiguration configuration, String storageType) {
 		return configuration.GetSection($"Storage:{storageType}");
 	}
