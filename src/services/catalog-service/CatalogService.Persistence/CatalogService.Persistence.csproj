@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="MassTransit" Version="8.0.15" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\building-blocks\BuildingBlocks.Persistence.EFCore.MSSQL\BuildingBlocks.Persistence.EFCore.MSSQL.csproj" />
+        <ProjectReference Include="..\..\..\shared\MessagingContracts.Catalog\MessagingContracts.Catalog.csproj" />
         <ProjectReference Include="..\CatalogService.Application\CatalogService.Application.csproj" />
         <ProjectReference Include="..\CatalogService.Domain\CatalogService.Domain.csproj" />
     </ItemGroup>

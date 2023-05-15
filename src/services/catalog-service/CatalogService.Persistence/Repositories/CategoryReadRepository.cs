@@ -13,8 +13,8 @@ public sealed class CategoryReadRepository : EFAsyncReadRepository<CategoryEntit
 		cancellationToken.ThrowIfCancellationRequested();
 		return this.GetListAsync(new() {
 			CancellationToken = cancellationToken,
-			EnableTracking = false,
-			OrderBy = x => x.OrderBy(category => category.Name),
+			EnableTracking = true,
+			OrderBy = x => x.OrderBy(category => category.Id),
 			Predicate = x => categoryIds.Any(categoryId => categoryId == x.Id)
 		});
 	}
