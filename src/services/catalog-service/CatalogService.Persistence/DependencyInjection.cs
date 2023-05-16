@@ -45,7 +45,9 @@ public static class DependencyInjection {
 
 	private static IServiceCollection AddServices(this IServiceCollection services) {
 		services.AddScoped<ICategoryService, CategoryService>()
-				.AddScoped<IProductService, ProductService>();
+				.AddScoped<IProductService, ProductService>()
+				.AddScoped<IVariantTypeService, VariantTypeService>()
+				.AddScoped<IVariantTypeOptionService, VariantTypeOptionService>();
 		return services;
 	}
 
