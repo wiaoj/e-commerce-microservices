@@ -5,7 +5,7 @@ namespace CatalogService.Application.Common.JsonConverters;
 public class IgnoreEmptyListConverter<T> : JsonConverter<List<T>> where T : class {
 	public override List<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 		// List read operations are handled by the JsonSerializer
-		return JsonSerializer.Deserialize<List<T>>(ref reader, options);
+		return JsonSerializer.Deserialize<List<T>>(ref reader, options) ?? new List<T>();
 	}
 
 	public override void Write(Utf8JsonWriter writer, List<T> value, JsonSerializerOptions options) {
