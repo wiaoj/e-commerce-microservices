@@ -14,8 +14,8 @@ internal class ProductEntityConfuguration : IEntityTypeConfiguration<ProductEnti
 			.WithMany(c => c.Products)
 			.UsingEntity<CategoryEntityProductEntity>();
 
-		builder.HasMany(p => p.ProductVariants)
-			.WithOne(pv => pv.Product)
-			.HasForeignKey(pv => pv.ProductId);
+		//builder.HasMany(p => p.ProductVariants)
+		//	.WithOne(pv => pv.Product)
+		//	.HasForeignKey(pv => pv.ProductId);
 	}
 }

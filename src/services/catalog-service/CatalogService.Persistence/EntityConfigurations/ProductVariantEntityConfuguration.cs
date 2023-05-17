@@ -9,8 +9,8 @@ internal class ProductVariantEntityConfuguration : IEntityTypeConfiguration<Prod
 			.ValueGeneratedOnAdd()
 			.IsRequired(true);
 
-		builder.HasOne(productVariant => productVariant.Product)
-			.WithMany(product => product.ProductVariants)
-			.HasForeignKey(productVariant => productVariant.ProductId);
+		//builder.HasOne(productVariant => productVariant.Product)
+		//	.WithMany(product => product.ProductVariants)
+		//	.HasForeignKey(productVariant => productVariant.ProductId);
 	}
 }

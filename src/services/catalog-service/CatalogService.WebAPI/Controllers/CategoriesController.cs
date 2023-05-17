@@ -6,6 +6,7 @@ using CatalogService.Application.Features.Categories.Commands.UpdateCategory;
 using CatalogService.Application.Features.Categories.Queries.GetCategories;
 using CatalogService.Application.Features.Categories.Queries.GetCategory;
 using CatalogService.Application.Features.Categories.Queries.GetCategoryWithProducts;
+using CatalogService.Application.Features.Categories.Queries.GetRootCategories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,12 @@ public class CategoriesController : ControllerBase {
 		return this.Ok(await this.sender.Send(new GetCategoriesQuery() {
 			PaginationRequest = request
 		}, cancellationToken));
+	}
+	
+	[HttpGet]
+	[Route("[action]")]
+	public async Task<IActionResult> GetRootCategories(CancellationToken cancellationToken) {
+		return this.Ok(await this.sender.Send(new GetRootCategoriesQuery(), cancellationToken));
 	}
 
 	[HttpGet("{id.Value}")]
