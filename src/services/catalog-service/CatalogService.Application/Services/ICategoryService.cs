@@ -24,4 +24,6 @@ public interface ICategoryService {
 		CategoryIdRequest categoryIdRequest,
 		PaginationRequest paginationRequest,
 		CancellationToken cancellationToken);
+	public Task<IEnumerable<GetRootCategoriesResponse>> GetRootCategoriesResponseAsync(
+		CancellationToken cancellationToken);
 }

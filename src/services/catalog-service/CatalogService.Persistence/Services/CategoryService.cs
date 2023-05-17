@@ -59,9 +59,9 @@ internal sealed class CategoryService : ICategoryService {
 			},
 			OrderBy = x => x.OrderBy(x => x.Name),
 		};
-		IPaginate<CategoryEntity> categories = 
+		IPaginate<CategoryEntity> categories =
 			await this.categoryReadRepository.GetPaginatedListAsync(parameters);
-		IPaginate<GetCategoriesResponse> mappedCategories = 
+		IPaginate<GetCategoriesResponse> mappedCategories =
 			this.mapper.Map<Paginate<GetCategoriesResponse>>(categories);
 		return mappedCategories;
 	}
@@ -134,16 +134,28 @@ internal sealed class CategoryService : ICategoryService {
 
 		CategoryEntity? category = await this.categoryReadRepository.GetAsync(parameters);
 		ArgumentNullException.ThrowIfNull(category, "Kategori bulunamadı!");
-		IPaginate<ProductEntity> products = 
+		IPaginate<ProductEntity> products =
 			await this.productReadRepository.GetProductsByCategoryId(
 				categoryIdRequest.Value,
 				paginationRequest,
 				cancellationToken);
 
-		GetCategoryWithProductsResponse mappedGetCategoryWithProductsRequest = 
+		GetCategoryWithProductsResponse mappedGetCategoryWithProductsRequest =
 			this.mapper.Map<GetCategoryWithProductsResponse>(category) with {
 				Products = this.mapper.Map<Paginate<GetProductResponse>>(products)
 			};
 		return mappedGetCategoryWithProductsRequest;
+	}
+
+	public async Task<IEnumerable<GetRootCategoriesResponse>> GetRootCategoriesResponseAsync(CancellationToken cancellationToken) {
+		GetListParameters<CategoryEntity> parameters = new() {
+			CancellationToken = cancellationToken,
+			EnableTracking = false,
+			OrderBy = x => x.OrderBy(category => category.Name),
+			Predicate = x => x.ParentCategoryId == null
+		};
+		IEnumerable<CategoryEntity> rootCategories = 
+			await this.categoryReadRepository.GetListAsync(parameters);
+		return this.mapper.Map<IEnumerable<GetRootCategoriesResponse>>(rootCategories);
 	}
 }
